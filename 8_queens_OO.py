@@ -1,6 +1,10 @@
 import time
 
 class Cell:
+    """A Cell is a square on the chessboard, which might contain a queen. A Cell
+    knows where it is on the Board, it's current state, and can interact with
+    the Board through queening.
+    """
     def __init__(self, idx, board):
         self.idx = idx
         self.board = board
@@ -9,15 +13,24 @@ class Cell:
         self.is_queen = False
         self.is_attacked = False
 
+    """The cell has a queen on it, and the Board updates newly attacked cells.
+    """
     def queen(self):
         self.is_queen = True
         self.board.calculate_attacked(self)
 
+    """The cell no longer has a queen on it, and the Board recalculates all
+    attacked cells.
+    """
     def unqueen(self):
         self.is_queen = False
         self.board.calculate_all_attacked()
 
 class Board:
+    """The Board manages the state of it's Cells and provides methods for
+    calculating which cells are currently attacked, and which cells a queen
+    that is placed will be able to attack.
+    """
     def __init__(self):
         self.cells = [Cell(i, self) for i in range(64)]
 
@@ -26,6 +39,7 @@ class Board:
             cell.is_queen = False
             cell.is_attacked = False
 
+    """For debugging purposes."""
     def display(self):
         for r in range(8):
             for c in range(8):
@@ -36,6 +50,13 @@ class Board:
                     print(" {:2} ".format(cell.idx), end=" ")
             print()
 
+    """Queens a cell, if it is legal to do so given the rules."""
+    def attempt_queening(self, cell_idx):
+        cell = self.cells[cell_idx]
+        if cell.is_attacked == False:
+            cell.queen()
+
+    """The current queens on the board."""
     def queens(self):
         queens = []
         for cell in self.cells:
@@ -43,16 +64,19 @@ class Board:
                 queens += [cell]
         return queens
 
+    """Sets newly attacked cells for a placed queen."""
     def calculate_attacked(self, cell):
         for c in self.attackable_cells(cell):
             c.is_attacked = True
 
+    """Calculates all attacked cells based on the current queen set."""
     def calculate_all_attacked(self):
         for cell in self.cells:
             cell.is_attacked = False
         for queen in self.queens():
             self.calculate_attacked(queen)
 
+    """Determines which cells are attackable from the position of a Cell."""
     def attackable_cells(self, cell):
         cells = []
         cells.extend(self.cells_in_dir(cell, self.nw_cell))
@@ -65,6 +89,9 @@ class Board:
         cells.extend(self.cells_in_dir(cell, self.se_cell))
         return cells
 
+    """Recursively determines and adds cells in a given direction until the edge
+    of the board is reached.
+    """
     def cells_in_dir(self, cell, dir, acc_cells=[]):
         next_cell = dir(cell)
         if next_cell is not None:
@@ -105,6 +132,9 @@ class Board:
             return self.cells[cell.idx + 9]
 
 class Engine:
+    """Engine connects the elements of the environment required to execute a
+    strategy to solve the 8 queens problem.
+    """
     def __init__(self, board):
         self.board = board
         self.solutions = []
@@ -113,9 +143,11 @@ class Engine:
         self.board.reset()
         self.solutions = []
 
+    """Result output."""
     def output_solutions(self, time):
         print("Found {} solutions in {:.2f} seconds:".format(len(self.solutions), time))
 
+    """Runs a strategy in a clean environment and provides output."""
     def run(self, strategy):
         self.reset()
         print("using: {}".format(strategy.__name__))
@@ -124,26 +156,35 @@ class Engine:
         self.output_solutions(time.time() - t)
 
 class Strategy:
-    def attempt_queening(self, cell):
-        if cell.is_attacked == False:
-            cell.queen()
+    """Strategy contains different search strategies that can be used to find
+    solutions to the 8 queens problem.
+    """
 
+    """Checks the goal state and if achieved, adds the current state to the
+    solution set."""
     def check_and_add_solution(self, queens, solutions):
         if len(queens) == 8:
             solutions.append([queen.idx for queen in queens])
 
+    """A strategy where each each cell is inspected linearly for queening,
+    queened if possible, then when all legal queens have been placed a board
+    configuration is examined for success. Then, the last placed queen is
+    backtracked and the next cell after that cell is inspected."""
     def linear_backtrack(self, board, solutions):
         cell_idx = 0
         starting_cell_idx = 0
         # There must be a queen in the first row
         while starting_cell_idx < 8:
-            self.attempt_queening(board.cells[cell_idx])
+            board.attempt_queening(cell_idx)
             # if we're at the end of a run
             if cell_idx == 63:
                 self.check_and_add_solution(board.queens(), solutions)
                 cell_idx, starting_cell_idx = self.backtrack(cell_idx, starting_cell_idx, board.queens())
             cell_idx += 1
 
+    """Backtrack the last placed queen (or two if required) and return the
+    indices of the current cell under examination and the starting cell for the
+    next run through of the board."""
     def backtrack(self, cell_idx, starting_cell_idx, queens):
         queens[-1].unqueen()
 
@@ -166,6 +207,9 @@ class Strategy:
         else:
             return queens[-1].idx, starting_cell_idx
 
+    """A strategy where every board combination is generated then inspected,
+    with the limitation that we can only place a single queen in any row or
+    column, which we know is required because of problem domain knowledge."""
     def brute_force(self, board, solutions):
         for q1 in range(8):
             for q2 in set(range(8)) - { q1 }:
@@ -176,16 +220,17 @@ class Strategy:
                                 for q7 in set(range(8)) - { q1, q2, q3, q4, q5, q6 }:
                                     for q8 in set(range(8)) - { q1, q2, q3, q4, q5, q6, q7 }:
                                         board.reset()
-                                        self.attempt_queening(board.cells[q1 + 0 * 8])
-                                        self.attempt_queening(board.cells[q2 + 1 * 8])
-                                        self.attempt_queening(board.cells[q3 + 2 * 8])
-                                        self.attempt_queening(board.cells[q4 + 3 * 8])
-                                        self.attempt_queening(board.cells[q5 + 4 * 8])
-                                        self.attempt_queening(board.cells[q6 + 5 * 8])
-                                        self.attempt_queening(board.cells[q7 + 6 * 8])
-                                        self.attempt_queening(board.cells[q8 + 7 * 8])
+                                        board.attempt_queening(q1 + 0 * 8)
+                                        board.attempt_queening(q2 + 1 * 8)
+                                        board.attempt_queening(q3 + 2 * 8)
+                                        board.attempt_queening(q4 + 3 * 8)
+                                        board.attempt_queening(q5 + 4 * 8)
+                                        board.attempt_queening(q6 + 5 * 8)
+                                        board.attempt_queening(q7 + 6 * 8)
+                                        board.attempt_queening(q8 + 7 * 8)
                                         self.check_and_add_solution(board.queens(), solutions)
 
+# Establish state and run each strategy with output
 if __name__ == '__main__':
     board = Board()
     engine = Engine(board)
