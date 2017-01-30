@@ -19,37 +19,26 @@ class Queue:
         return self.contents.pop()
 
 class Bfs:
-    def __init__(self, state_machine):
-        self.state_machine = state_machine
+    def __init__(self, subject):
+        self.subject = subject
         self.frontier = Queue()
         self.explored = []
         self.success_node = None
 
-    def success(self):
-        return self.state_machine.current_state() == self.state_machine.goal_state()
-
-    def visited_nodes(self):
-        return self.explored + self.frontier.contents or []
-
-    def add_next_states(self, parent):
-        for state in self.state_machine.next_states():
-            if [node.state for node in self.visited_nodes()].count(state) == 0:
-                self.frontier.enqueue(Node(state, parent))
-
     def search(self):
-        self.frontier.enqueue(Node(self.state_machine.current_state(), None))
+        self.frontier.enqueue(Node(self.subject.current_state(), None))
 
         while self.frontier:
             node = self.frontier.dequeue()
             self.explored.append(node)
 
-            self.state_machine.set_state(node.state)
+            self.subject.set_state(node.state)
 
-            if self.success():
+            if self.subject.current_state() == self.subject.goal_state():
                 self.success_node = node
                 return True
 
-            self.add_next_states(node)
+            self._add_next_states(node)
 
         return False
 
@@ -64,8 +53,16 @@ class Bfs:
         return {
             "cost": len(moves),
             "path": [node.state for node in moves],
-            "visited_nodes": len(self.visited_nodes()),
+            "visited_nodes": len(self._visited_nodes()),
             "frontier_nodes": len(self.frontier.contents),
             "max_frontier_nodes": self.frontier.max,
             "max_search_depth": len(moves)
         }
+
+    def _visited_nodes(self):
+        return self.explored + self.frontier.contents or []
+
+    def _add_next_states(self, parent):
+        for state in self.subject.next_states():
+            if [node.state for node in self._visited_nodes()].count(state) == 0:
+                self.frontier.enqueue(Node(state, parent))
