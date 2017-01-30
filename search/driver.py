@@ -33,10 +33,16 @@ if __name__ == '__main__':
         results["time"] = time.time() - start_time
         # TODO is memory working?
         results["memory"] = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
-        # TODO:
-        print(results)
-        # spit out results to file
+        output_file.write("time: {:.2f} seconds\n".format(results["time"]))
+        output_file.write("memory: {:,.2f}KB\n".format(results["memory"]))
+        output_file.write("cost: {}\n".format(results["cost"]))
+        output_file.write("max_search_depth: {}\n".format(results["max_search_depth"]))
+        output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
+        output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
+        output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
+        output_file.write("path: {}\n".format(results["path"]))
     else:
-        # TODO:
-        print("No solution found!")
-        # spit out this message to file along with stats
+        output_file.write("No solution found!")
+        output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
+        output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
+        output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
