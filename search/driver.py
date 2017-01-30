@@ -1,3 +1,4 @@
+# TODO: docs
 import sys
 import time
 import resource
@@ -19,30 +20,33 @@ def handle_input():
     else:
         return algos[sys.argv[1]], [int(n) for n in sys.argv[2].split(",")]
 
+def write_out(results, start_time):
+    output_file = open("./output.txt", "w")
+
+    results["time"] = time.time() - start_time
+    # TODO is memory working?
+    results["memory"] = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
+
+    if results.get("path"):
+        output_file.write("Solution found:")
+        output_file.write("time: {:.2f} seconds\n".format(results["time"]))
+        output_file.write("memory: {:,.2f}KB\n".format(results["memory"]))
+        output_file.write("cost: {}\n".format(results["cost"]))
+        output_file.write("max_search_depth: {}\n".format(results["max_search_depth"]))
+        output_file.write("path: {}\n".format(results["path"]))
+    else:
+        output_file.write("No solution found!")
+
+    output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
+    output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
+    output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
+    output_file.close()
+
 if __name__ == '__main__':
     algorithm, initial_state = handle_input()
 
     strategy = algorithm(nsquare.Board(initial_state))
 
     start_time = time.time()
-    result = strategy.search()
-
-    output_file = open("./output.txt", "w")
-    if result:
-        results = strategy.results()
-        results["time"] = time.time() - start_time
-        # TODO is memory working?
-        results["memory"] = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
-        output_file.write("time: {:.2f} seconds\n".format(results["time"]))
-        output_file.write("memory: {:,.2f}KB\n".format(results["memory"]))
-        output_file.write("cost: {}\n".format(results["cost"]))
-        output_file.write("max_search_depth: {}\n".format(results["max_search_depth"]))
-        output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
-        output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
-        output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
-        output_file.write("path: {}\n".format(results["path"]))
-    else:
-        output_file.write("No solution found!")
-        output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
-        output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
-        output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
+    strategy.search()
+    write_out(strategy.results(), start_time)
