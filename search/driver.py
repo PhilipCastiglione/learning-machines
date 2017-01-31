@@ -10,13 +10,17 @@ import dfsl
 import idfs
 
 def handle_input():
-    algos = {"bfs": bfs.Bfs, "dfs": dfs.Dfs, "dfsl": dfsl.Dfsl, "idfs": idfs.Idfs}
+    algos = {
+        "bfs": bfs.Bfs,    # Breadth First Search
+        "dfs": dfs.Dfs,    # Depth First Search
+        "dfsl": dfsl.Dfsl, # Depth-Limited Depth First Search
+        "idfs": idfs.Idfs  # Iterative Deepening Depth First Search
+    }
 
     if len(sys.argv) != 3:
-        print("required args include the search algo and the initial board state")
+        print("USAGE")
         print("available search algos include: {}".format(list(algos.keys())))
-        print("initial board state must be a valid n-square board or crazy stuff may occur")
-        print("initial board state must be a CSV string with no spaces")
+        print("initial board state must be a valid n-square board input as a csv (no spaces)")
         print("example:")
         print("    python3 driver.py bfs 1,2,3,0,5,6,4,7,8")
         exit(2)
@@ -30,6 +34,7 @@ def write_out(results, start_time):
     # TODO is memory working?
     results["memory"] = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
 
+    # TODO: fix output of results approach
     if results.get("path"):
         output_file.write("Solution found:\n")
         output_file.write("time: {:.2f} seconds\n".format(results["time"]))
@@ -44,6 +49,7 @@ def write_out(results, start_time):
     output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
     output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
     output_file.close()
+    print("Search completed. Results in output.txt")
 
 if __name__ == '__main__':
     algorithm, initial_state = handle_input()
