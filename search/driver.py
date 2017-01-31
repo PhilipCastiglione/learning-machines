@@ -6,9 +6,10 @@ import resource
 import nsquare
 import bfs
 import dfs
+import dfsl
 
 def handle_input():
-    algos = {"bfs": bfs.Bfs, "dfs": dfs.Dfs}
+    algos = {"bfs": bfs.Bfs, "dfs": dfs.Dfs, "dfsl": dfsl.Dfsl}
 
     if len(sys.argv) != 3:
         print("required args include the search algo and the initial board state")
