@@ -6,3 +6,5 @@ I could make a mode for that
 how to run
 
 this is adapted from, but not directly...
+
+make the output more reasonable and specific to the algo
