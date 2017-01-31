@@ -28,7 +28,7 @@ class Bfs:
     def search(self):
         self.frontier.enqueue(Node(self.subject.current_state(), None))
 
-        while self.frontier:
+        while self.frontier.contents:
             node = self.frontier.dequeue()
             self.explored.append(node)
 
@@ -43,12 +43,15 @@ class Bfs:
         return False
 
     def results(self):
-        moves = [self.success_node]
-        parent = self.success_node.parent
-        while parent:
-            moves.append(parent)
-            parent = parent.parent
-        moves.reverse()
+        if self.success_node:
+            moves = [self.success_node]
+            parent = self.success_node.parent
+            while parent:
+                moves.append(parent)
+                parent = parent.parent
+            moves.reverse()
+        else:
+            moves = []
 
         return {
             "cost": len(moves),
