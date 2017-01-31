@@ -47,7 +47,7 @@ class Idfs:
                 self.success_node = node
                 return True
 
-            self._add_next_states(node)
+            self._add_next_states(node, max_depth)
 
         if max_depth > self.peak_depth:
             return False
@@ -83,7 +83,8 @@ class Idfs:
     def _visited_nodes(self):
         return self.explored + self.frontier.contents or []
 
-    def _add_next_states(self, parent):
+    def _add_next_states(self, parent, max_depth):
         for state in self.subject.next_states():
-            if [node.state for node in self._visited_nodes()].count(state) == 0:
+            nodes_with_state = [node.state for node in self._visited_nodes()].count(state)
+            if nodes_with_state == 0 and parent.depth <= max_depth:
                 self.frontier.push(Node(state, parent))
