@@ -7,9 +7,10 @@ import nsquare
 import bfs
 import dfs
 import dfsl
+import idfs
 
 def handle_input():
-    algos = {"bfs": bfs.Bfs, "dfs": dfs.Dfs, "dfsl": dfsl.Dfsl}
+    algos = {"bfs": bfs.Bfs, "dfs": dfs.Dfs, "dfsl": dfsl.Dfsl, "idfs": idfs.Idfs}
 
     if len(sys.argv) != 3:
         print("required args include the search algo and the initial board state")
