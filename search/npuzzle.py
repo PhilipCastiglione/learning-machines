@@ -21,10 +21,17 @@ class Board:
     def current_state(self):
         return self.tiles
 
+    """Returns the cost of moving from one state to another state. The move
+    is assumed to be legal.
+    """
+    def move_cost(self, state1, state2):
+        # given that the move must be legal, the cost is always 1 in n-puzzle
+        return 1
+
     """Returns the cost of the current state, determined using the Manhattan
     Distance heuristic, or rectilinear distance.
     """
-    def cost(self):
+    def heuristic_cost(self):
         cost = 0
         for current_idx, tile in enumerate(self.tiles):
             if tile != 0:
