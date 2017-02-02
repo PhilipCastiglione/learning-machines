@@ -3,7 +3,7 @@ import sys
 import time
 import resource
 
-import nsquare
+import npuzzle
 import bfs
 import dfs
 import dfsl
@@ -54,7 +54,7 @@ def write_out(results, start_time):
 if __name__ == '__main__':
     algorithm, initial_state = handle_input()
 
-    strategy = algorithm(nsquare.Board(initial_state))
+    strategy = algorithm(npuzzle.Board(initial_state))
 
     start_time = time.time()
     strategy.search()
