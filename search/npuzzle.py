@@ -1,7 +1,14 @@
 import math
 
+"""N-puzzle is a sliding tile puzzle with the objective of arranging tiles in
+ascending order on a board. The game functions with restrictions on available
+moves enforced by the current state of the board.
+
+refer: https://en.wikipedia.org/wiki/15_puzzle
+"""
+
 class Board:
-    """Board defines the shape, contents and rules for the n-square puzzle
+    """Board defines the shape, contents and rules for the n-puzzle
     board, and makes itself available as a state machine for search algorithms.
     """
 
