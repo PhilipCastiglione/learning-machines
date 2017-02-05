@@ -4,6 +4,7 @@ import time
 import resource
 
 import npuzzle
+
 from bfs import Bfs
 from dfs import Dfs
 from lds import Lds
@@ -18,44 +19,33 @@ def handle_input():
     }
 
     if len(sys.argv) != 3:
-        print("USAGE")
-        print("available search algos include: {}".format(list(algos.keys())))
-        print("initial board state must be a valid n-square board input as a csv (no spaces)")
-        print("example:")
-        print("    python3 driver.py bfs 1,2,3,0,5,6,4,7,8")
+        print("Invalid usage. Please refer to README.md")
         exit(2)
     else:
-        return algos[sys.argv[1]], [int(n) for n in sys.argv[2].split(",")]
+        return algos[sys.argv[1]], npuzzle, [int(n) for n in sys.argv[2].split(",")]
 
-def write_out(results, start_time):
+def run(strategy):
+    start_time = time.time()
+    # TODO is memory working?
+    memory = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
+    strategy.search()
+    write_out(strategy.results(), start_time, memory)
+
+def write_out(results, start_time, memory):
     output_file = open("./output.txt", "w")
 
     results["time"] = time.time() - start_time
-    # TODO is memory working?
-    results["memory"] = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
+    results["memory"] = memory
 
-    # TODO: fix output of results approach
-    if results.get("path"):
-        output_file.write("Solution found:\n")
-        output_file.write("time: {:.2f} seconds\n".format(results["time"]))
-        output_file.write("memory: {:,.2f}KB\n".format(results["memory"]))
-        output_file.write("cost: {}\n".format(results["cost"]))
-        output_file.write("max_search_depth: {}\n".format(results["max_search_depth"]))
-        output_file.write("path: {}\n".format(results["path"]))
-    else:
-        output_file.write("No solution found!\n")
+    for field in results:
+        output_file.write("{}: {}\n".format(field, results[field]))
 
-    output_file.write("visited_nodes: {}\n".format(results["visited_nodes"]))
-    output_file.write("frontier_nodes: {}\n".format(results["frontier_nodes"]))
-    output_file.write("max_frontier_nodes: {}\n".format(results["max_frontier_nodes"]))
     output_file.close()
     print("Search completed. Results in output.txt")
 
 if __name__ == '__main__':
-    algorithm, initial_state = handle_input()
+    algorithm, puzzle, initial_state = handle_input()
 
-    strategy = algorithm(npuzzle.Board(initial_state))
+    strategy = algorithm(puzzle.Board(initial_state))
 
-    start_time = time.time()
-    strategy.search()
-    write_out(strategy.results(), start_time)
+    run(strategy)
