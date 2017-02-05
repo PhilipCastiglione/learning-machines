@@ -1,7 +1,5 @@
 # TODO: docs
 
-LIMIT = 20
-
 class Node:
     def __init__(self, state, parent):
         self.state = state
@@ -24,19 +22,24 @@ class Stack:
     def pop(self):
         return self.contents.pop()
 
-class Dfsl:
+class Ids:
     def __init__(self, subject):
         self.subject = subject
+        self.initial_state = subject.current_state()
+        self.success_node = None
         self.frontier = Stack()
         self.explored = []
-        self.success_node = None
+        self.peak_depth = 0
 
-    def search(self):
+    def search(self, max_depth=1):
+        self._reset()
         self.frontier.push(Node(self.subject.current_state(), None))
 
         while self.frontier.contents:
             node = self.frontier.pop()
             self.explored.append(node)
+            if node.depth > self.peak_depth:
+                self.peak_depth = node.depth
 
             self.subject.set_state(node.state)
 
@@ -44,9 +47,12 @@ class Dfsl:
                 self.success_node = node
                 return True
 
-            self._add_next_states(node)
+            self._add_next_states(node, max_depth)
 
-        return False
+        if max_depth > self.peak_depth:
+            return False
+        else:
+            return self.search(max_depth + 1)
 
     def results(self):
         if self.success_node:
@@ -68,11 +74,17 @@ class Dfsl:
             "max_search_depth": len(moves)
         }
 
+    def _reset(self):
+        self.subject.set_state(self.initial_state)
+        self.frontier = Stack()
+        self.explored = []
+        self.peak_depth = 0
+
     def _visited_nodes(self):
         return self.explored + self.frontier.contents or []
 
-    def _add_next_states(self, parent):
+    def _add_next_states(self, parent, max_depth):
         for state in self.subject.next_states():
             nodes_with_state = [node.state for node in self._visited_nodes()].count(state)
-            if nodes_with_state == 0 and parent.depth < LIMIT:
+            if nodes_with_state == 0 and parent.depth <= max_depth:
                 self.frontier.push(Node(state, parent))

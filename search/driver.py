@@ -4,17 +4,17 @@ import time
 import resource
 
 import npuzzle
-import bfs
-import dfs
-import dfsl
-import idfs
+from bfs import Bfs
+from dfs import Dfs
+from lds import Lds
+from ids import Ids
 
 def handle_input():
     algos = {
-        "bfs": bfs.Bfs,    # Breadth First Search
-        "dfs": dfs.Dfs,    # Depth First Search
-        "dfsl": dfsl.Dfsl, # Depth-Limited Depth First Search
-        "idfs": idfs.Idfs  # Iterative Deepening Depth First Search
+        "bfs": Bfs, # Breadth-First Search
+        "dfs": Dfs, # Depth-First Search
+        "lds": Lds, # Limited Depth Search
+        "ids": Ids  # Iterative Deepening Search
     }
 
     if len(sys.argv) != 3:
