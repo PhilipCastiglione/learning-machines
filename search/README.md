@@ -1,6 +1,10 @@
 # Search
-Search is a common problem in computer science and artificial intelligence. Here
-we have a number of common search algorithms demonstrated.
+Searching through state spaces for a goal state is a common task in Computer
+Science and Artificial Intelligence. Here are a number of common search
+algorithms demonstrated.
+
+If you're still reading at this point you probably have some reason to be
+interested in search algorithms, so welcome to a niche crowd of humans.
 
 ## Algorithms
 1. Breadth-First Search (`bfs.py`)
@@ -8,13 +12,23 @@ we have a number of common search algorithms demonstrated.
 1. Limited Depth Search (`lds.py`)
 1. Iterative Deepening Search (`ids.py`)
 
+## TODO ALGOS
+1. Problem type with non 1 step cost
+1. Finish and test Uniform-Cost Search (`ucs.py`)
+1. Greedy Best-First Search (`gbfs.py`)
+1. A\*/A-Star (`astar.py`)
+1. IDA\*/IDA-Star (`idastar.py`)
+1. Dijkstra's Algorithm (`dijkstra.py`)
+
 ## Problem Domain
-A problem is required as the domain in which to test the search algorithms.
+A problem is required as the subject upon which to test the search algorithms.
 
-I am using the [n-puzzle](https://en.wikipedia.org/wiki/15_puzzle) problem because
-it is _"a classical problem for modelling algorithms involving heuristics"_.
+I am using [n-puzzle](https://en.wikipedia.org/wiki/15_puzzle) as the subject
+for most of the search algorithms because it is _"a classical problem for
+modelling algorithms involving heuristics"_ and has convenient properties for
+search tasks.
 
-I am further using TODO (something for UCS, A star, IDA star)
+I am further using TODO (something for UCS, Greedy Best First, IDA-Star)
 
 ## Running
 TODO:
@@ -25,15 +39,44 @@ TODO:
         print("    python3 driver.py bfs 1,2,3,0,5,6,4,7,8")
         exit(2)
 
+## Warning
+It is entirely possible to enter input that will have your computer searching
+for a very long time. These algorithms are implemented in Python and written for
+clarity, not optimised for speed. You might want to know how to stop a program
+running on your terminal before you set up an unsolvable 15 square search on a
+normal desktop computer.
+
+## Another Warning
+If you enter data not representing a valid initial state for a problem, crazy
+things might happen. Probably you should try not to do that if you want sensible
+behaviour.
+
+## Licence
+Do what you want with this, but don't try and use any of this stuff for
+production code - that would be silly. Just in case:
+
+Copyright (c) 2017 Philip Castiglione
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
 ## TODO
 1. Documentation
-1. Finish README
+1. Finish and refine README
 1. make the output more reasonable and specific to the algo
 
-## TODO ALGOS
-1. Problem type with non 1 step cost
-1. Uniform-Cost Search (`ucs.py`)
-1. Greedy Best-First Search (`gbfs.py`)
-1. A\*/A-Star (`astar.py`)
-1. IDA\*/IDA-Star (`idastar.py`)
-1. Dijkstra's Algorithm (`dijkstra.py`)
