@@ -9,7 +9,8 @@ refer: https://en.wikipedia.org/wiki/15_puzzle
 
 class Board:
     """Board defines the shape, contents and rules for the n-puzzle
-    board, and makes itself available as a state machine for search algorithms.
+    board, and makes itself available through state manipulation for search
+    algorithms.
     """
 
     """Instantiate with an initial state and cache dimensions."""
@@ -35,8 +36,8 @@ class Board:
         # given that the move must be legal, the cost is always 1 in n-puzzle
         return 1
 
-    """Returns the cost of the current state, determined using the Manhattan
-    Distance heuristic, or rectilinear distance.
+    """Returns the heuristic cost of the current state, determined using the
+    Manhattan Distance heuristic, or rectilinear distance.
     """
     def heuristic_cost(self):
         cost = 0

@@ -78,5 +78,7 @@ SOFTWARE.
 ## TODO
 1. Documentation
 1. Finish and refine README
+1. Proper unit test for cities
+1. Other unit tests?
 1. make the output more reasonable and specific to the algo
 
