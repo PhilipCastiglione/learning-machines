@@ -17,7 +17,7 @@ class Travel:
     """
 
     """Instantiate with an initial state and the board cities."""
-    def __init__(self, initial_state, goal_state):
+    def __init__(self, initial_state):
         self.cities = cities
         self.current_city = initial_state
         # the goal city is fixed as straight line distance data is supplied
