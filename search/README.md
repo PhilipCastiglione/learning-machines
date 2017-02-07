@@ -11,6 +11,7 @@ interested in search algorithms, so welcome to a niche crowd of humans.
 1. Depth-First Search (`dfs.py`)
 1. Limited Depth Search (`lds.py`)
 1. Iterative Deepening Search (`ids.py`)
+1. Uniform-Cost Search (`ucs.py`)
 
 ## Problem Domain
 A problem is required as the subject upon which to test the search algorithms.
@@ -75,10 +76,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## TODO
-1. test Problem type with non 1 step cost
-1. finish ucs and test
 1. Documentation for driver, ids, ucs
-1. Uniform-Cost Search (`ucs.py`)
 1. Greedy Best-First Search (`gbfs.py`)
 1. A\*/A-Star (`astar.py`)
 1. IDA\*/IDA-Star (`idastar.py`)

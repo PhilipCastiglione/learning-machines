@@ -109,7 +109,7 @@ class Lds:
 
     """Visited nodes includes explored nodes and nodes on the frontier."""
     def _visited_nodes(self):
-        return self.explored + self.frontier.contents or []
+        return self.explored + self.frontier.contents or [] # must return a list
 
     """Adds states that can be reached from the current state to the Stack, up
     to the depth limit.
