@@ -19,11 +19,21 @@ def handle_input():
         "ids": Ids  # Iterative Deepening Search
     }
 
-    if len(sys.argv) != 3:
+    problems = {
+        "npuzzle": Npuzzle,
+        "travel": Travel,
+    }
+
+    state_decoders = {
+        "npuzzle": lambda x: [int(n) for n in x.split(",")],
+        "travel": lambda x: x
+    }
+
+    if len(sys.argv) != 4:
         print("Invalid usage. Please refer to README.md")
         exit(2)
     else:
-        return algos[sys.argv[1]], Npuzzle, [int(n) for n in sys.argv[2].split(",")]
+        return algos[sys.argv[1]], problems[sys.argv[2]], state_decoders[sys.argv[2]](sys.argv[3])
 
 def run(strategy):
     start_time = time.time()
