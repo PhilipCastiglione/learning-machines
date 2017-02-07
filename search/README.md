@@ -26,9 +26,15 @@ A problem is required as the subject upon which to test the search algorithms.
 I am using [n-puzzle](https://en.wikipedia.org/wiki/15_puzzle) as the subject
 for most of the search algorithms because it is _"a classical problem for
 modelling algorithms involving heuristics"_ and has convenient properties for
-search tasks.
+search tasks. This problem is appropriate to test algorithms like Breadth-
+First Search, Depth-First Search (and variants) and algorithms that rely on a
+heuristic like Greedy Best-First Search and A/IDA-Star.
 
-I am further using TODO (something for UCS, Greedy Best First, IDA-Star)
+I am further using a travelling search problem with data defined in the "cities"
+files in ./problems/ which involves a non-uniform cost per move in addition to
+an imperfect (but still admissible) heuristic. These properties make this
+problem useful for testing algorithms such as Uniform-Cost Search, A/IDA-Star,
+but can be used to test any algorithm.
 
 ## Running
 sample commands
