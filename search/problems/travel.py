@@ -38,7 +38,7 @@ class Travel:
     is assumed to be legal.
     """
     def move_cost(self, state1, state2):
-        return self.cities[state1][state2]
+        return self.cities[state1]["neighbours"][state2]
 
     """Returns the heuristic cost of the current state, determined using the
     straight line distance to the goal city.
@@ -49,7 +49,7 @@ class Travel:
 
     """Returns the legal states available from the current state."""
     def next_states(self):
-        return list(self.cities[self.current_city].keys())
+        return list(self.cities[self.current_city]["neighbours"].keys())
 
     """Sets the current state."""
     def set_state(self, state):
