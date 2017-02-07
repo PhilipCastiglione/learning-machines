@@ -7,10 +7,9 @@ moves enforced by the current state of the board.
 refer: https://en.wikipedia.org/wiki/15_puzzle
 """
 
-class Board:
-    """Board defines the shape, contents and rules for the n-puzzle
-    board, and makes itself available through state manipulation for search
-    algorithms.
+class Npuzzle:
+    """Npuzzle defines the board, contents and rules for the n-puzzle game
+    and makes itself available through state manipulation for search algorithms.
     """
 
     """Instantiate with an initial state and cache dimensions."""

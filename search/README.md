@@ -31,6 +31,7 @@ search tasks.
 I am further using TODO (something for UCS, Greedy Best First, IDA-Star)
 
 ## Running
+sample commands
 TODO:
         print("USAGE")
         print("available search algos include: {}".format(list(algos.keys())))

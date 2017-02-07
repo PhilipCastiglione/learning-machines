@@ -3,12 +3,13 @@ import sys
 import time
 import resource
 
-import npuzzle
+from problems.npuzzle import Npuzzle
+from problems.travel import Travel
 
-from bfs import Bfs
-from dfs import Dfs
-from lds import Lds
-from ids import Ids
+from algorithms.bfs import Bfs
+from algorithms.dfs import Dfs
+from algorithms.lds import Lds
+from algorithms.ids import Ids
 
 def handle_input():
     algos = {
@@ -22,7 +23,7 @@ def handle_input():
         print("Invalid usage. Please refer to README.md")
         exit(2)
     else:
-        return algos[sys.argv[1]], npuzzle, [int(n) for n in sys.argv[2].split(",")]
+        return algos[sys.argv[1]], Npuzzle, [int(n) for n in sys.argv[2].split(",")]
 
 def run(strategy):
     start_time = time.time()
@@ -46,6 +47,6 @@ def write_out(results, start_time, memory):
 if __name__ == '__main__':
     algorithm, puzzle, initial_state = handle_input()
 
-    strategy = algorithm(puzzle.Board(initial_state))
+    strategy = algorithm(puzzle(initial_state))
 
     run(strategy)

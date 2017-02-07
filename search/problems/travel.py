@@ -1,4 +1,4 @@
-from cities import cities
+from problems.cities import cities
 
 """Travel is a puzzle where a list of cities in North America must be navigated
 in order to find a goal city. The navigation approach presents a problem to be
@@ -10,10 +10,10 @@ is provided to the goal city.
 refer: ./cities.py
 """
 
-class Board:
-    """Board defines the shape, contents and rules for the conceptual travel
-    board, and makes itself available through state manipulation for search
-    algorithms.
+class Travel:
+    """Travel defines the search space, contents and rules for the conceptual
+    travel board, and makes itself available through state manipulation for
+    search algorithms.
     """
 
     """Instantiate with an initial state and the board cities."""
@@ -43,12 +43,12 @@ class Board:
     """Returns the heuristic cost of the current state, determined using the
     straight line distance to the goal city.
     """
-    def heuristic_cost(self)
+    def heuristic_cost(self):
         # sld => Straight Line Distance
         return self.cities[self.current_city]["sld"]
 
     """Returns the legal states available from the current state."""
-    def next_states(self)
+    def next_states(self):
         return list(self.cities[self.current_city].keys())
 
     """Sets the current state."""
