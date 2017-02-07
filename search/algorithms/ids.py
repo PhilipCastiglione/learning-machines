@@ -38,6 +38,7 @@ class Stack:
     """Add an item to the top of the Stack."""
     def push(self, element):
         self.contents.append(element)
+        # If the Stack is the longest it has been, update max.
         if len(self.contents) > self.max:
             self.max = len(self.contents)
 

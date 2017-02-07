@@ -76,7 +76,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## TODO
-1. Documentation for driver, ids, ucs
+1. Documentation for driver
 1. Greedy Best-First Search (`gbfs.py`)
 1. A\*/A-Star (`astar.py`)
 1. IDA\*/IDA-Star (`idastar.py`)
