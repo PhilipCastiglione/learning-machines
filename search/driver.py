@@ -1,24 +1,28 @@
-# TODO: docs
+"""Driver coordinates input, the running of the an algorithm on a problem and
+produces output.
+"""
 import sys
 import time
 import resource
-
-from problems.npuzzle import Npuzzle
-from problems.travel import Travel
 
 from algorithms.bfs import Bfs
 from algorithms.dfs import Dfs
 from algorithms.lds import Lds
 from algorithms.ids import Ids
 from algorithms.ucs import Ucs
+from algorithms.gbfs import Gbfs
+from problems.npuzzle import Npuzzle
+from problems.travel import Travel
 
+# TODO: docs
 def handle_input():
     algos = {
-        "bfs": Bfs, # Breadth-First Search
-        "dfs": Dfs, # Depth-First Search
-        "lds": Lds, # Limited Depth Search
-        "ids": Ids, # Iterative Deepening Search
-        "ucs": Ucs  # Uniform-Cost Search
+        "bfs": Bfs,   # Breadth-First Search
+        "dfs": Dfs,   # Depth-First Search
+        "lds": Lds,   # Limited Depth Search
+        "ids": Ids,   # Iterative Deepening Search
+        "ucs": Ucs,   # Uniform-Cost Search
+        "gbfs": Gbfs, # Greedy Best-First Search
     }
 
     problems = {
