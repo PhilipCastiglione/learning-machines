@@ -1,4 +1,4 @@
-from problems.cities import cities
+from problems.dat.cities import cities
 
 """Travel is a puzzle where a list of cities in North America must be navigated
 in order to find a goal city. The navigation approach presents a problem to be
