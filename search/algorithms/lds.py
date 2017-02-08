@@ -86,28 +86,28 @@ class Lds:
         return False
 
     """Returns statistics describing the search."""
-    # TODO: update results output and document
     def results(self):
         if self.success_node:
-            moves = [self.success_node]
+            # construct the success path
+            path = [self.success_node]
             parent = self.success_node.parent
             while parent:
-                moves.append(parent)
+                path.append(parent)
                 parent = parent.parent
-            moves.reverse()
+            path.reverse()
         else:
-            moves = []
+            path = []
 
         return {
-            "cost": len(moves),
-            "path": [node.state for node in moves],
+            "path": [node.state for node in path],
+            "path length": len(path),
             "visited_nodes": len(self._visited_nodes()),
-            "frontier_nodes": len(self.frontier.contents),
-            "max_frontier_nodes": self.frontier.max,
-            "max_search_depth": len(moves)
+            "number of visited nodes": len(self._visited_nodes()),
+            "current frontier nodes": [node.state for node in self.frontier.contents],
+            "number of frontier nodes": len(self.frontier.contents),
+            "max number of frontier nodes": self.frontier.max
         }
 
-    """Visited nodes includes explored nodes and nodes on the frontier."""
     def _visited_nodes(self):
         return self.explored + self.frontier.contents or [] # must return a list
 
