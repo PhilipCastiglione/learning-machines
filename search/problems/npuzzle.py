@@ -35,12 +35,13 @@ class Npuzzle:
         # given that the move must be legal, the cost is always 1 in n-puzzle
         return 1
 
-    """Returns the heuristic cost of the current state, determined using the
-    Manhattan Distance heuristic, or rectilinear distance.
+    """Returns the heuristic cost of the current or provided state, determined
+    using the Manhattan Distance heuristic, or rectilinear distance.
     """
-    def heuristic_cost(self):
+    def heuristic_cost(self, state=None):
+        tiles = state or self.tiles
         cost = 0
-        for current_idx, tile in enumerate(self.tiles):
+        for current_idx, tile in enumerate(tiles):
             if tile != 0:
                 goal_idx = tile - 1
                 # add the distance in rows

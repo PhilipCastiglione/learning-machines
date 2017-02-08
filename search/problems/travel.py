@@ -21,7 +21,7 @@ class Travel:
         self.cities = cities
         self.current_city = initial_state
         # the goal city is fixed as straight line distance data is supplied
-        self.goal_city = 'Sault Ste Marie'
+        self.goal_city = 'sault ste marie'
 
     """For debugging."""
     def print(self):
@@ -40,12 +40,13 @@ class Travel:
     def move_cost(self, state1, state2):
         return self.cities[state1]["neighbours"][state2]
 
-    """Returns the heuristic cost of the current state, determined using the
-    straight line distance to the goal city.
+    """Returns the heuristic cost of the current or provided state, determined
+    using the straight line distance to the goal city.
     """
-    def heuristic_cost(self):
+    def heuristic_cost(self, state=None):
         # sld => Straight Line Distance
-        return self.cities[self.current_city]["sld"]
+        city = state or self.current_city
+        return self.cities[city]["sld"]
 
     """Returns the legal states available from the current state."""
     def next_states(self):
