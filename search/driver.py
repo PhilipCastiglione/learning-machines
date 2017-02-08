@@ -28,7 +28,7 @@ def handle_input():
 
     state_decoders = {
         "npuzzle": lambda x: [int(n) for n in x.split(",")],
-        "travel": lambda x: x
+        "travel": lambda x: x.lower()
     }
 
     if len(sys.argv) != 4:
