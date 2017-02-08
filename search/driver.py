@@ -12,19 +12,21 @@ from algorithms.ids import Ids
 from algorithms.ucs import Ucs
 from algorithms.gbfs import Gbfs
 from algorithms.astar import Astar
+from algorithms.idastar import Idastar
 from problems.npuzzle import Npuzzle
 from problems.travel import Travel
 
 # TODO: docs
 def handle_input():
     algos = {
-        "bfs": Bfs,    # Breadth-First Search
-        "dfs": Dfs,    # Depth-First Search
-        "lds": Lds,    # Limited Depth Search
-        "ids": Ids,    # Iterative Deepening Search
-        "ucs": Ucs,    # Uniform-Cost Search
-        "gbfs": Gbfs,  # Greedy Best-First Search
-        "astar": Astar # A-Star/A* Search
+        "bfs": Bfs, # Breadth-First Search
+        "dfs": Dfs, # Depth-First Search
+        "lds": Lds, # Limited Depth Search
+        "ids": Ids, # Iterative Deepening Search
+        "ucs": Ucs, # Uniform-Cost Search
+        "gbfs": Gbfs, # Greedy Best-First Search
+        "astar": Astar, # A-Star/A* Search
+        "idastar": Idastar # A-Star/A* Search
     }
 
     problems = {

@@ -14,6 +14,7 @@ interested in search algorithms, so welcome to a niche crowd of humans.
 1. Uniform-Cost Search (`ucs.py`)
 1. Greedy Best-First Search (`gbfs.py`)
 1. A\*/A-Star (`astar.py`)
+1. IDA\*/IDA-Star (`idastar.py`)
 
 ## Problem Domain
 A problem is required as the subject upon which to test the search algorithms.
@@ -83,10 +84,10 @@ SOFTWARE.
 1. add search depth stat to results in dfs and variants?
 1. add number of runs stat to results ids and ida star
 1. Documentation for driver
-1. IDA\*/IDA-Star (`idastar.py`)
 1. Dijkstra's Algorithm (`dijkstra.py`)
 1. Finish and refine README
 1. Proper unit test for cities
 1. Other unit tests?
 1. refactor to n queens
 1. maybe indicate stats with a prefix or something to indicate they're not integral to the algorithm
+1. visualizations!
