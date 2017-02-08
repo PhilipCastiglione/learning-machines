@@ -16,9 +16,11 @@ from algorithms.idastar import Idastar
 from problems.npuzzle import Npuzzle
 from problems.travel import Travel
 
-# TODO: docs
+"""Interpret the input from the user and return the algorithm, puzzle and
+decoded state input.
+"""
 def handle_input():
-    algos = {
+    algorithms = {
         "bfs": Bfs, # Breadth-First Search
         "dfs": Dfs, # Depth-First Search
         "lds": Lds, # Limited Depth Search
@@ -43,30 +45,43 @@ def handle_input():
         print("Invalid usage. Please refer to README.md")
         exit(2)
     else:
-        return algos[sys.argv[1]], problems[sys.argv[2]], state_decoders[sys.argv[2]](sys.argv[3])
+        return algorithms[sys.argv[1]], problems[sys.argv[2]], state_decoders[sys.argv[2]](sys.argv[3])
 
+"""Execute the search strategy and record some additional metrics, return the
+results hash for output.
+"""
 def run(strategy):
     start_time = time.time()
     # TODO is memory working?
     memory = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
-    strategy.search()
-    write_out(strategy.results(), start_time, memory)
 
-def write_out(results, start_time, memory):
-    output_file = open("./output.txt", "w")
+    strategy.search()
+    results = strategy.results()
 
     results["time"] = time.time() - start_time
     results["memory"] = memory
 
-    for field in results:
+    return results
+
+"""Write the results out to a file."""
+def write_out(results):
+    output_file = open("./output.txt", "w")
+
+    keys = list(results.keys())
+    keys.sort()
+
+    for field in keys:
         output_file.write("{}: {}\n".format(field, results[field]))
 
     output_file.close()
     print("Search completed. Results in output.txt")
 
+"""Executes the search strategy on the problem with the provided state."""
 if __name__ == '__main__':
     algorithm, puzzle, initial_state = handle_input()
 
     strategy = algorithm(puzzle(initial_state))
 
-    run(strategy)
+    results = run(strategy)
+
+    write_out(results)

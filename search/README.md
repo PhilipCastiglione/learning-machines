@@ -81,9 +81,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## TODO
+1. Memory output from driver
 1. add search depth stat to results in dfs and variants?
 1. add number of runs stat to results ids and ida star
-1. Documentation for driver
 1. Dijkstra's Algorithm (`dijkstra.py`)
 1. Finish and refine README
 1. Proper unit test for cities
