@@ -14,7 +14,7 @@ class Node:
     """
     def __init__(self, state, parent, cost):
         self.state = state
-        self.parent = parent
+        self.parent = parent # for reconstructing success path
         self.lowest_cost = cost
 
 class Heap:
@@ -25,7 +25,7 @@ class Heap:
     """Instantiate with empty contents and a maximum reached size of zero."""
     def __init__(self):
         self.contents = []
-        self.max = 0
+        self.max = 0 # output statistic, not used in search
 
     """Add an item to the Heap."""
     def insert(self, element):
@@ -61,7 +61,7 @@ class Ucs:
         self.subject = subject
         self.frontier = Heap()
         self.explored = []
-        self.success_node = None
+        self.success_node = None # for reconstructing success path
         self.current_cost = 0
 
     """Executes the search strategy and returns a boolean indicating success."""

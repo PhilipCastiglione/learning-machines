@@ -11,7 +11,7 @@ class Node:
     """Instantiate with a state representation and a link to a parent node."""
     def __init__(self, state, parent):
         self.state = state
-        self.parent = parent
+        self.parent = parent # for reconstructing success path
 
 class Queue:
     """A Queue data structure is used to order nodes to search, prioritising
@@ -22,7 +22,7 @@ class Queue:
     """Instantiate with empty contents and a maximum reached size of zero."""
     def __init__(self):
         self.contents = []
-        self.max = 0
+        self.max = 0 # output statistic, not used in search
 
     """Add an item to the end of the Queue."""
     def enqueue(self, element):
@@ -46,7 +46,7 @@ class Bfs:
         self.subject = subject
         self.frontier = Queue()
         self.explored = []
-        self.success_node = None
+        self.success_node = None # for reconstructing success path
 
     """Executes the search strategy and returns a boolean indicating success."""
     def search(self):

@@ -18,8 +18,8 @@ class Node:
     """
     def __init__(self, state, parent):
         self.state = state
-        self.parent = parent
-        if parent:
+        self.parent = parent # for reconstructing success path
+        if parent: # a node with no parent has a depth of 1
             self.depth = parent.depth + 1
         else:
             self.depth = 1
@@ -33,7 +33,7 @@ class Stack:
     """Instantiate with empty contents and a maximum reached size of zero."""
     def __init__(self):
         self.contents = []
-        self.max = 0
+        self.max = 0 # output statistic, not used in search
 
     """Add an item to the top of the Stack."""
     def push(self, element):
@@ -62,7 +62,7 @@ class Ids:
     def __init__(self, subject):
         self.subject = subject
         self.initial_state = subject.current_state()
-        self.success_node = None
+        self.success_node = None # for reconstructing success path
         self.frontier = Stack()
         self.explored = []
         self.peak_depth = 0

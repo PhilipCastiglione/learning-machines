@@ -18,10 +18,10 @@ class Node:
     """
     def __init__(self, state, parent, movement_cost, heuristic_cost):
         self.state = state
-        self.parent = parent
+        self.parent = parent # for reconstructing success path
         self.movement_cost = movement_cost
         self.heuristic_cost = heuristic_cost
-        if parent:
+        if parent: # a node with no parent has a depth of 1
             self.depth = parent.depth + 1
         else:
             self.depth = 1
@@ -38,7 +38,7 @@ class Heap:
     """Instantiate with empty contents and a maximum reached size of zero."""
     def __init__(self):
         self.contents = []
-        self.max = 0
+        self.max = 0 # output statistic, not used in search
 
     """Add an item to the Heap."""
     def insert(self, element):
@@ -77,7 +77,7 @@ class Idastar:
     def __init__(self, subject):
         self.subject = subject
         self.initial_state = subject.current_state()
-        self.success_node = None
+        self.success_node = None # for reconstructing success path
         self.frontier = Heap()
         self.explored = []
         self.current_cost = 0

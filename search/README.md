@@ -42,8 +42,7 @@ used is the straight line distance from each city to the goal.
 ## Running
 Running an algorithm over a problem using an initial state is organised by the
 driver file. The script is run on the commandline using Python. It's written in
-Python 3 and I haven't checked whether it works in Python 2 because it was
-superseded in 2008.
+Python 3 and I haven't checked whether it works in Python 2.
 
 Running the program requires the following arguments:
 
@@ -210,10 +209,9 @@ SOFTWARE.
 
 ## TODO
 1. add search depth stat to results in dfs and variants?
-1. add number of runs stat to results ids and ida star
+1. add number of runs stat to results ids and ida star?
 1. Dijkstra's Algorithm (`dijkstra.py`)
 1. Proper unit test for cities
 1. Other unit tests?
-1. refactor to n queens for a 3rd problem type
-1. maybe indicate stats with a prefix or something to indicate they're not integral to the algorithm
+1. refactor the OO queens to n queens for a 3rd problem type
 1. visualizations!

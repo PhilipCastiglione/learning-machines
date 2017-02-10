@@ -13,7 +13,7 @@ class Node:
     """Instantiate with a state representation and a link to a parent node."""
     def __init__(self, state, parent):
         self.state = state
-        self.parent = parent
+        self.parent = parent # for reconstructing success path
 
 class Stack:
     """A Stack data structure is used to order nodes to search, prioritising
@@ -24,7 +24,7 @@ class Stack:
     """Instantiate with empty contents and a maximum reached size of zero."""
     def __init__(self):
         self.contents = []
-        self.max = 0
+        self.max = 0 # output statistic, not used in search
 
     """Add an item to the top of the Stack."""
     def push(self, element):
@@ -48,7 +48,7 @@ class Dfs:
         self.subject = subject
         self.frontier = Stack()
         self.explored = []
-        self.success_node = None
+        self.success_node = None # for reconstructing success path
 
     """Executes the search strategy and returns a boolean indicating success."""
     def search(self):
