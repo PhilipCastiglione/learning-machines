@@ -28,28 +28,64 @@ heuristic like Greedy Best-First Search and A/IDA-Star.
 
 I am further using a travelling search problem with data defined in the "cities"
 files in ./problems/ which involves a non-uniform cost per move in addition to
-an imperfect (but still admissible) heuristic. These properties make this
+an imperfect (but admissible) heuristic. These properties make this
 problem useful for testing algorithms such as Uniform-Cost Search, A/IDA-Star,
 but can be used to test any algorithm.
 
-TODO: put a picture of the map here
+![Map Showing Travel Problem Search Space](./problems/dat/cities.png)
 
 ## Running
-sample commands
-TODO:
-        print("USAGE")
-        print("available search algos include: {}".format(list(algos.keys())))
-        print("initial board state must be a valid n-square board input as a csv (no spaces)")
-        print("example:")
-        print("    python3 driver.py bfs 1,2,3,0,5,6,4,7,8")
-        exit(2)
+Running an algorithm over a problem using an initial state is organised by the
+driver file. The script is run on the commandline using Python. It's written in
+Python 3 and I haven't checked whether it works in Python 2 because that was
+superseded in 2008.
+
+Running the program requires the following arguments:
+
+```
+python3 driver.py <search algorithm> <problem> <initial-state>
+```
+
+Example input:
+
+```
+$ python3 driver.py bfs npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py bfs npuzzle 1,2,3,4,8,7,6,5,0
+$ python3 driver.py bfs npuzzle 1,2,3,4,5,6,7,8,9,10,11,12,0,13,14,15
+
+$ python3 driver.py dfs npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py lds npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py ids npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py ucs npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py gbfs npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py astar npuzzle 1,2,3,0,5,6,4,7,8
+$ python3 driver.py idastar npuzzle 1,2,3,0,5,6,4,7,8
+
+$ python3 driver.py bfs travel "Santa Fe"
+$ python3 driver.py bfs travel "Calgary"
+
+$ python3 driver.py dfs travel "Santa Fe"
+$ python3 driver.py lds travel "Santa Fe"
+$ python3 driver.py ids travel "Santa Fe"
+$ python3 driver.py ucs travel "Santa Fe"
+$ python3 driver.py gbfs travel "Santa Fe"
+$ python3 driver.py astar travel "Santa Fe"
+$ python3 driver.py idastar travel "Santa Fe"
+```
+
+While the program is running there is no feedback. When the search is complete
+(whether successful or not) your terminal will report:
+
+```
+Search completed. Results in output.txt
+```
 
 ## Warning
 It is entirely possible to enter input that will have your computer searching
 for a very long time. These algorithms are implemented in Python and written for
 clarity, not optimised for speed. You might want to know how to stop a program
 running on your terminal before you set up an unsolvable 15 square search on a
-normal desktop computer.
+laptop that might take days (or weeks) to run.
 
 ## Another Warning
 If you enter data not representing a valid initial state for a problem, crazy
@@ -81,7 +117,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## TODO
-1. Memory output from driver
 1. add search depth stat to results in dfs and variants?
 1. add number of runs stat to results ids and ida star
 1. Dijkstra's Algorithm (`dijkstra.py`)
