@@ -52,14 +52,12 @@ results hash for output.
 """
 def run(strategy):
     start_time = time.time()
-    # TODO is memory working?
-    memory = resource.getrusage(resource.RUSAGE_CHILDREN)[2]
 
     strategy.search()
     results = strategy.results()
 
-    results["time"] = time.time() - start_time
-    results["memory"] = memory
+    results["time (s)"] = time.time() - start_time
+    results["memory (kb)"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
     return results
 
@@ -71,7 +69,13 @@ def write_out(results):
     keys.sort()
 
     for field in keys:
-        output_file.write("{}: {}\n".format(field, results[field]))
+        format_string = {
+            int: "{}: {:,}\n",
+            float: "{}: {:2f}\n",
+            str: "{}: {}\n",
+            list: "{}: {}\n"
+        }[type(results[field])]
+        output_file.write(format_string.format(field, results[field]))
 
     output_file.close()
     print("Search completed. Results in output.txt")
