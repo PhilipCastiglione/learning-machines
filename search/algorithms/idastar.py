@@ -82,13 +82,15 @@ class Idastar:
         self.explored = []
         self.current_cost = 0
         self.peak_depth = 0
+        self.iterations = 0 # output statistic, not used in search
 
     """Recursively executes the search strategy and returns a boolean indicating
     success. Max depth begins at 1 and increases with each run.
     """
     def search(self, max_depth=1):
-        # at the start of a run, reset state
+        # at the start of a run, reset state and increment iteration count
         self._reset()
+        self.iterations += 1
         # add the initial state to the Heap
         initial_state = self.subject.current_state()
         initial_cost = self.subject.heuristic_cost()
@@ -145,6 +147,7 @@ class Idastar:
             "path": [costs(node) for node in path],
             "path length": len(path),
             "number of visited nodes": len(self._visited_nodes()),
+            "iterations": self.iterations,
             "current frontier nodes": [costs(node) for node in self.frontier.contents],
             "number of frontier nodes": len(self.frontier.contents),
             "max number of frontier nodes": self.frontier.max
