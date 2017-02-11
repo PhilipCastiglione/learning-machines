@@ -58,6 +58,7 @@ class Lds:
         self.frontier = Stack()
         self.explored = []
         self.success_node = None # for reconstructing success path
+        self.peak_depth = 0 # output statistic, not used in search
 
     """Executes the search strategy and returns a boolean indicating success."""
     def search(self):
@@ -68,6 +69,10 @@ class Lds:
             # remove the top item from the Stack and explore it
             node = self.frontier.pop()
             self.explored.append(node)
+
+            # increment peak depth if necessary
+            if node.depth > self.peak_depth:
+                self.peak_depth = node.depth
 
             self.subject.set_state(node.state)
 
@@ -100,6 +105,7 @@ class Lds:
         return {
             "path": [node.state for node in path],
             "path length": len(path),
+            "peak depth": self.peak_depth,
             "visited_nodes": len(self._visited_nodes()),
             "number of visited nodes": len(self._visited_nodes()),
             "current frontier nodes": [node.state for node in self.frontier.contents],

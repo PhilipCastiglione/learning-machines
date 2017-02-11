@@ -14,6 +14,11 @@ class Node:
     def __init__(self, state, parent):
         self.state = state
         self.parent = parent # for reconstructing success path
+        # depth is an output statistic, not used in search
+        if parent: # a node with no parent has a depth of 1
+            self.depth = parent.depth + 1
+        else:
+            self.depth = 1
 
 class Stack:
     """A Stack data structure is used to order nodes to search, prioritising
@@ -49,6 +54,7 @@ class Dfs:
         self.frontier = Stack()
         self.explored = []
         self.success_node = None # for reconstructing success path
+        self.peak_depth = 0 # output statistic, not used in search
 
     """Executes the search strategy and returns a boolean indicating success."""
     def search(self):
@@ -59,6 +65,10 @@ class Dfs:
             # remove the top item from the Stack and explore it
             node = self.frontier.pop()
             self.explored.append(node)
+
+            # increment peak depth if necessary
+            if node.depth > self.peak_depth:
+                self.peak_depth = node.depth
 
             self.subject.set_state(node.state)
 
@@ -90,6 +100,7 @@ class Dfs:
         return {
             "path": [node.state for node in path],
             "path length": len(path),
+            "peak depth": self.peak_depth,
             "visited_nodes": len(self._visited_nodes()),
             "number of visited nodes": len(self._visited_nodes()),
             "current frontier nodes": [node.state for node in self.frontier.contents],
