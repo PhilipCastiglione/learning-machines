@@ -11,7 +11,7 @@ interested in search algorithms, so welcome to a niche crowd of humans.
 1. Depth-First Search (`dfs.py`)
 1. Limited Depth Search (`lds.py`)
 1. Iterative Deepening Search (`ids.py`)
-1. Uniform-Cost Search (`ucs.py`)
+1. Uniform-Cost Search (`ucs.py`) (a variant of Dijkstra's algorithm common in AI)
 1. Greedy Best-First Search (`gbfs.py`)
 1. A\*/A-Star (`astar.py`)
 1. IDA\*/IDA-Star (`idastar.py`)
@@ -208,10 +208,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## TODO
-1. add search depth stat to results in dfs and variants?
-1. add number of runs stat to results ids and ida star?
-1. Dijkstra's Algorithm (`dijkstra.py`)
 1. Proper unit test for cities
 1. Other unit tests?
 1. refactor the OO queens to n queens for a 3rd problem type
 1. visualizations!
+1. move licence out into main repo, create top level readme
