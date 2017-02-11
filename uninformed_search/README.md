@@ -182,8 +182,3 @@ up a depth first 15 square search that might take days to run.
 If you enter data not representing a valid initial state for a problem, crazy
 things might happen. Probably you should try not to do that if you want sensible
 behaviour.
-
-## TODO
-1. Proper unit test for cities
-1. Other unit tests?
-1. visualizations!
