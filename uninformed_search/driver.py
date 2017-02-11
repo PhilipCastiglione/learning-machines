@@ -1,4 +1,4 @@
-"""Driver coordinates input, the running of the an algorithm on a problem and
+"""Driver coordinates input, the running of an algorithm on a problem and
 produces output.
 """
 import sys
