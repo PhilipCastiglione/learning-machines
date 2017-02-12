@@ -56,11 +56,7 @@ if __name__ == '__main__':
     algorithm, puzzle = handle_input()
     
     p = puzzle()
-    p.move(0, 1)
-    p.move(1, 0)
-    p.move(3, 1)
-    p.move(5, 0)
-    p.print()
+    p.play()
     #strategy = algorithm(puzzle())
 
     #results = execute(strategy)
