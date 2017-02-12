@@ -27,7 +27,7 @@ algos:
 
 problem ideas, use libs and write a wrapper ideally:
 
-tic tac toe
-chess
-checkers
-backgammon (for stochastic)
+1. tic tac toe
+1. chess
+1. checkers
+1. backgammon (for stochastic)
