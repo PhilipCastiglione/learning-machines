@@ -3,7 +3,8 @@ for user input and provides output.
 """
 import sys
 import time
-import resource
+import resource # TODO
+import random
 
 #from algorithms.bfs import Bfs
 from problems.tictactoe import TicTacToe
@@ -32,6 +33,42 @@ def execute(strategy):
     # TODO
     pass
 
+# TODO doc
+def play(puzzle):
+    start(puzzle)
+    while (puzzle.winner() == None):
+        next_turn(puzzle)
+    end(puzzle)
+
+# TODO doc
+def start(puzzle):
+    puzzle.print()
+    puzzle.current_player = random.randint(0, 1)
+    if (puzzle.current_player == 0):
+        print("You go first!")
+    else:
+        print("The AI will go first.")
+    time.sleep(2)
+
+# TODO doc
+def next_turn(puzzle):
+    puzzle.print()
+    if (puzzle.current_player == 0):
+        puzzle.player_move()
+    else:
+        puzzle.ai_move()
+    puzzle.current_player = 1 - puzzle.current_player
+
+# TODO doc
+def end(puzzle):
+    puzzle.print()
+    if (puzzle.winner() == 0):
+        print("Congratulations, you win!")
+    elif (puzzle.winner() == 1):
+        print("The AI has won.")
+    else:
+        print("The game is a draw.")
+
 """Write the results out to a file."""
 def write_out(results):
     output_file = open("./output.txt", "w")
@@ -55,8 +92,7 @@ def write_out(results):
 if __name__ == '__main__':
     algorithm, puzzle = handle_input()
     
-    p = puzzle()
-    p.play()
+    play(puzzle())
     #strategy = algorithm(puzzle())
 
     #results = execute(strategy)

@@ -1,6 +1,4 @@
-import random
 import os
-import time
 
 # TODO doc
 # refer: https://en.wikipedia.org/wiki/Tic-tac-toe
@@ -13,24 +11,7 @@ class TicTacToe:
         self.current_player = None
 
     # TODO doc
-    def play(self):
-        self._start()
-        while (self._winner() == None):
-            self._next_turn()
-        self._end()
-
-    # TODO doc
-    def _start(self):
-        self._print()
-        self.current_player = random.randint(0, 1)
-        if (self.current_player == 0):
-            print("You go first!")
-        else:
-            print("The AI will go first.")
-        time.sleep(2)
-
-    # TODO doc
-    def _print(self):
+    def print(self):
         os.system(["clear","cls"][os.name == "nt"])
         for row in range(3):
             for col in range(3):
@@ -45,16 +26,7 @@ class TicTacToe:
             print()
 
     # TODO doc
-    def _next_turn(self):
-        self._print()
-        if (self.current_player == 0):
-            self._player_move()
-        else:
-            self._ai_move()
-        self.current_player = 1 - self.current_player
-
-    # TODO doc
-    def _player_move(self):
+    def player_move(self):
         prompt = "Enter row and column of move (like this: 11): "
         valid_moves = ["1","2","3"]
         valid_move = False
@@ -67,7 +39,7 @@ class TicTacToe:
         self._move(move, 0)
 
     # TODO doc
-    def _ai_move(self):
+    def ai_move(self):
         # temporary testing
         self._move(int(input("ai move is an index: ")), 1)
 
@@ -76,7 +48,7 @@ class TicTacToe:
         self.board[index] = player
 
     # TODO doc
-    def _winner(self):
+    def winner(self):
         cells = self.board
         if (cells[0] == cells[1] == cells[2] != None):
             return cells[0]
@@ -97,13 +69,3 @@ class TicTacToe:
         elif (cells.count(None) == 0):
             return 2 # This is a draw condition
         return None # There is no winner yet
-
-    # TODO doc
-    def _end(self):
-        self._print()
-        if (self._winner() == 0):
-            print("Congratulations, you win!")
-        elif (self._winner() == 1):
-            print("The AI has won.")
-        else:
-            print("The game is a draw.")
