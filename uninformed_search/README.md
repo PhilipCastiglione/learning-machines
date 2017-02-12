@@ -16,7 +16,7 @@ interested in search algorithms, so welcome to a niche crowd of humans.
 1. A\*/A-Star (`astar.py`)
 1. IDA\*/IDA-Star (`idastar.py`)
 
-## Problem Domain
+## Problem Domains
 A problem is required as the subject upon which to test the search algorithms.
 
 I am using [n-puzzle](https://en.wikipedia.org/wiki/15_puzzle) as a sample
@@ -39,7 +39,7 @@ used is the straight line distance from each city to the goal.
 
 ![A List Of Heuristic Values](./problems/dat/cities_sld.png)
 
-## Running
+## Usage
 Running an algorithm over a problem using an initial state is organised by the
 driver file. The script is run on the commandline using Python. It's written in
 Python 3 and I haven't checked whether it works in Python 2.
