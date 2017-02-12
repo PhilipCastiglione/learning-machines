@@ -6,7 +6,7 @@ import time
 import resource
 
 #from algorithms.bfs import Bfs
-#from problems.npuzzle import Npuzzle
+from problems.tictactoe import TicTacToe
 
 """Handle user input and return the selected algorithm and problem."""
 def handle_input():
@@ -15,14 +15,15 @@ def handle_input():
     }
 
     problems = {
-        #"npuzzle": Npuzzle,
+        "tictactoe": TicTacToe,
     }
 
     if len(sys.argv) != 3:
         print("Invalid usage. Please refer to README.md")
         exit(2)
     else:
-        return algorithms[sys.argv[1]], problems[sys.argv[2]]
+        #return algorithms[sys.argv[1]], problems[sys.argv[2]]
+        return None, problems[sys.argv[2]]
 
 """Execute the search strategy using an interactive loop for user input, then
 return a results hash for output.
@@ -53,9 +54,15 @@ def write_out(results):
 """Executes the search strategy on the problem."""
 if __name__ == '__main__':
     algorithm, puzzle = handle_input()
+    
+    p = puzzle()
+    p.move(0, 1)
+    p.move(1, 0)
+    p.move(3, 1)
+    p.move(5, 0)
+    p.print()
+    #strategy = algorithm(puzzle())
 
-    strategy = algorithm(puzzle())
+    #results = execute(strategy)
 
-    results = execute(strategy)
-
-    write_out(results)
+    #write_out(results)
