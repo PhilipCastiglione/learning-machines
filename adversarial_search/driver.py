@@ -26,18 +26,11 @@ def handle_input():
         #return algorithms[sys.argv[1]], problems[sys.argv[2]]
         return None, problems[sys.argv[2]]
 
-"""Execute the search strategy using an interactive loop for user input, then
-return a results hash for output.
-"""
-def execute(strategy):
-    # TODO
-    pass
-
 # TODO doc
-def play(puzzle):
+def play(puzzle, strategy):
     start(puzzle)
     while (puzzle.winner() == None):
-        next_turn(puzzle)
+        next_turn(puzzle, strategy)
     end(puzzle)
 
 # TODO doc
@@ -51,12 +44,12 @@ def start(puzzle):
     time.sleep(2)
 
 # TODO doc
-def next_turn(puzzle):
+def next_turn(puzzle, strategy):
     puzzle.print()
     if (puzzle.current_player == 0):
         puzzle.player_move()
     else:
-        puzzle.ai_move()
+        puzzle.set_state(strategy.search())
     puzzle.current_player = 1 - puzzle.current_player
 
 # TODO doc
@@ -88,13 +81,13 @@ def write_out(results):
     output_file.close()
     print("Process completed. Results in output.txt")
 
-"""Executes the search strategy on the problem."""
+"""Set up the game with the strategy and play until complete, then report."""
 if __name__ == '__main__':
     algorithm, puzzle = handle_input()
     
-    play(puzzle())
-    #strategy = algorithm(puzzle())
+    game = puzzle()
+    strategy = algorithm(game)
 
-    #results = execute(strategy)
+    play(game, strategy)
 
-    #write_out(results)
+    write_out(strategy.results())
