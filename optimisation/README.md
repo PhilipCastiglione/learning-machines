@@ -1,0 +1,16 @@
+# Optimisation
+TODO
+
+## Genetic Algorithms
+algo params:
+intialization
+population model
+parent selection
+crossover
+mutation
+survivor selection
+termination condition
+lifetime adaptation model
+
+## Problem Domains
+titanic survivor prediction (optimisiing factor significance)
