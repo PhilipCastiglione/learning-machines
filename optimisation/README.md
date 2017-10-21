@@ -14,3 +14,13 @@ lifetime adaptation model
 
 ## Problem Domains
 titanic survivor prediction (optimisiing factor significance)
+
+## TODO
+process
++ initialize population
+- loop
++ * fitness function calculation
+- * crossover
+- * mutation
+- * survivor selection
+- terminate and return best
