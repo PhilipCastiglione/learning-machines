@@ -122,16 +122,34 @@ def breed(parents):
 
 """TODO comment
 """
+def poorest_fit_idxs(fitnesses, n):
+    idxs = []
+    worst_fitnesses = sorted(fitnesses)[:n]
+    for i, f in enumerate(fitnesses):
+        if f in worst_fitnesses:
+            idxs.append(i)
+    return idxs
+
+"""TODO comment
+"""
+def select_survivors(fitnesses, population, children):
+    replacement_idxs = poorest_fit_idxs(fitnesses, len(children))
+    for i, c in enumerate(children):
+        population[replacement_idxs[i]] = c
+
+"""TODO comment
+"""
 def generation(population):
     fitnesses = [fitness(chromosome) for chromosome in population]
     parents = select_parents(fitnesses, population)
     children = breed(parents)
-    #select_survivors(population, children)
+    select_survivors(fitnesses, population, children)
 
 if __name__ == '__main__':
     population = generate_random_population()
-    #fitnesses = [fitness(chromosome) for chromosome in population]
-    #print(fitnesses)
-    generation(population)
-    #fitnesses = [fitness(chromosome) for chromosome in population]
-    #print(fitnesses)
+    fitnesses = [fitness(chromosome) for chromosome in population]
+    print(sum(fitnesses) / len(fitnesses))
+    for i in range(100):
+        generation(population)
+        fitnesses = [fitness(chromosome) for chromosome in population]
+        print(sum(fitnesses) / len(fitnesses))
