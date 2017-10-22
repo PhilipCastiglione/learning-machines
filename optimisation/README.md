@@ -18,9 +18,10 @@ titanic survivor prediction (optimisiing factor significance)
 ## TODO
 process
 + initialize population
-- loop
++ loop
 + * fitness function calculation
-- * crossover
-- * mutation
-- * survivor selection
++ * parent selection
++ * crossover
++ * mutation
++ * survivor selection
 - terminate and return best
