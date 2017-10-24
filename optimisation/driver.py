@@ -1,4 +1,4 @@
-"""TODO comment
+"""TODO comment and properly document functions
 """
 
 from problems.dat.titanic import titanic
@@ -7,7 +7,8 @@ import random
 
 # from input, with defaults
 hyperparameters = {
-    'population_size': 20,
+    'generations': 100,
+    'population_size': 100,
     'factor_random_min': 0.5,
     'factor_random_max': 1.5,
     'breeding_rate': 0.2,
@@ -16,7 +17,7 @@ hyperparameters = {
     'mutation_range': 0.1,
 }
 
-"""TODO comment
+"""Print a chromosome to the console for debugging.
 """
 def print_chromosome(chromosome):
     for feature in chromosome:
@@ -25,13 +26,13 @@ def print_chromosome(chromosome):
             line += "{:.2f} ".format(category)
         print(line)
 
-"""TODO comment
+"""Returns a population (list) with randomly initialized chromosomes
 """
 def generate_random_population():
     p_size = hyperparameters['population_size']
     return [generate_random_chromosome() for n in range(p_size)]
 
-"""TODO comment
+"""Returns a new random chromosome.
 """
 def generate_random_chromosome():
     l = hyperparameters['factor_random_min']
@@ -43,7 +44,7 @@ def generate_random_chromosome():
     parents_children = [random.uniform(l, u) for i in range(10)]
     return [pclass, sex, age_bucket, siblings_spouses, parents_children]
 
-"""TODO comment
+"""Calculate and return chromosome fitness.
 """
 def fitness(chromosome):
     correct = 0
@@ -149,7 +150,7 @@ if __name__ == '__main__':
     population = generate_random_population()
     fitnesses = [fitness(chromosome) for chromosome in population]
     print(sum(fitnesses) / len(fitnesses))
-    for i in range(100):
+    for i in range(hyperparameters['generations']):
         generation(population)
         fitnesses = [fitness(chromosome) for chromosome in population]
         print(sum(fitnesses) / len(fitnesses))
