@@ -16,6 +16,14 @@ and generating result statistics.
 
 [Link](./uninformed_search)
 
+## Adversarial Search
+
+WIP.
+
+## Optimisation
+
+Implementations of optimisation techniques, starting with Genetic Algorithms. WIP.
+
 ## Charting
 
 Not much, right now. Probably some simple tools for generating visualizations
