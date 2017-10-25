@@ -1,27 +1,29 @@
 # Optimisation
-TODO
+
+Placeholder
 
 ## Genetic Algorithms
+
 algo params:
-intialization
-population model
-parent selection
-crossover
-mutation
-survivor selection
-termination condition
-lifetime adaptation model
+
+- intialization (random vs heuristic)
+- population model
+- parent selection
+- crossover
+- mutation
+- survivor selection
+- lifetime adaptation model
+- number of generations
+- termination condition
 
 ## Problem Domains
-titanic survivor prediction (optimisiing factor significance)
+1. titanic survivor prediction (optimisiing prediction factors)
 
 ## TODO
-process
-+ initialize population
-+ loop
-+ * fitness function calculation
-+ * parent selection
-+ * crossover
-+ * mutation
-+ * survivor selection
+- README
+- driver needs to only handle input, delegate
+- move algo logic into ga algo file
+- documentation
+- termination condition
+- output/reporting
 - terminate and return best
