@@ -1,9 +1,10 @@
 This repository contains information related to an exploration of Artificial
-Intelligence programming.
+Intelligence programming and Machine Learning.
 
 # Contents
 
 1. [Uninformed Search](#uninformed-search)
+1. [Optimisation](#optimisation)
 1. [Charting](#charting)
 1. [Miscellany](#miscellany)
 1. [Licence](#licence)
@@ -16,13 +17,15 @@ and generating result statistics.
 
 [Link](./uninformed_search)
 
-## Adversarial Search
-
-WIP.
-
 ## Optimisation
 
 Implementations of optimisation techniques, starting with Genetic Algorithms. WIP.
+
+[Link](./optimisation)
+
+## Adversarial Search
+
+WIP.
 
 ## Charting
 
