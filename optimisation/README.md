@@ -21,9 +21,9 @@ algo params:
 
 ## TODO
 - README
-- driver needs to only handle input, delegate
-- move algo logic into ga algo file
+- driver needs to handle input for hyperparams (maybe also algo params?)
 - documentation
-- termination condition
+- there is a bug in the GA where occasionally it goes into a downward spiral?
 - output/reporting
-- terminate and return best
+- more optimisation algos (GAs can use different approachs for lots of steps)
+- more problem domains
