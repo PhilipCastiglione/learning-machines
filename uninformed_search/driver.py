@@ -63,21 +63,21 @@ def run(strategy):
 
 """Write the results out to a file."""
 def write_out(results):
-    output_file = open("./output.txt", "w")
-
     keys = list(results.keys())
     keys.sort()
 
-    for field in keys:
-        format_string = {
-            int: "{}: {:,}\n",
-            float: "{}: {:2f}\n",
-            str: "{}: {}\n",
-            list: "{}: {}\n"
-        }[type(results[field])]
-        output_file.write(format_string.format(field, results[field]))
+    format_strings = {
+        int: "{}: {:,}\n",
+        float: "{}: {:2f}\n",
+        str: "{}: {}\n",
+        list: "{}: {}\n"
+    }
 
-    output_file.close()
+    with open("./output.txt", mode="w", encoding="utf-8") as output_file:
+        for field in keys:
+            format_string = format_strings[type(results[field])]
+            output_file.write(format_string.format(field, results[field]))
+
     print("Search completed. Results in output.txt")
 
 """Executes the search strategy on the problem with the provided state."""
