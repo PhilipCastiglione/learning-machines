@@ -1,4 +1,4 @@
-from sys import stdin, stdout
+from sys import stdin
 import time
 
 
@@ -27,11 +27,11 @@ class Settings:
     def _parse_settings(cls):
         settings = {}
         while True:
-            line = stdin.readline().strip()
+            line = stdin.readline().lower().strip()
 
             # wait until we have a line
             if len(line) <= 0:
-                time.sleep(1)
+                time.sleep(0.01)
                 continue
 
             if not line.startswith('settings'):
