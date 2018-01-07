@@ -1,8 +1,8 @@
 
 TODO:
- - game engine
- - bot
+ - document
  - field
+ - bot
  - players?
  - timing
  - error handling
