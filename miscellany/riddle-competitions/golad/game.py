@@ -3,7 +3,6 @@ import traceback
 
 from settings import Settings
 from bot import Bot
-from field import Field
 
 
 class Game:
@@ -12,8 +11,7 @@ class Game:
     def __init__(self, settings):
         self.settings = settings
         self.round = 0
-        self.field = None
-        self.bot = Bot()
+        self.bot = Bot(settings['your_botid'])
 
     def _handle_update(self, line):
         _, target, key, value = line.split()
@@ -23,8 +21,7 @@ class Game:
             if key == 'round':
                 self.round = int(value)
             elif key == 'field':
-                self.field = Field(value)
-                self.bot.set_current_node(self.field)
+                self.bot.update_current_node(value)
             else:
                 raise Exception('Unrecognised game update', line)
         elif target in self.settings['player_names']:
@@ -55,7 +52,8 @@ class Game:
                     game._handle_update(line)
                 elif line.startswith('action'):
                     # TODO: make time based decisions about building tree vs acting
-                    game.bot.build_tree_for(game.settings['time_per_move'] - cls.TICK_DURATION)
+                    t = game.settings['time_per_move'] - cls.TICK_DURATION
+                    game.bot.build_tree_for(t)
                     game.bot.move()
                 elif line.startswith('quit'):
                     break
