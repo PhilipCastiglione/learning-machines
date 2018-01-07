@@ -1,13 +1,14 @@
-
 TODO:
  - document
- - field
- - bot
- - players?
- - timing
+ - next state - build and run generator for rainbow hash of next states
+ - bot - build tree for NON NAIVE
+ - field - build children
+ - use frontier rather than resetting graph progress every time
+ - game - timing
  - error handling
  - logging
  - lib structure
  - deploy pipe/script
  - confirm garbage collection on nodes works as expected
- - improve heuristics; need a shortcut for definite win, complex heuristic considers more than just gap? tile positions?
+ - improve heuristic; consider more than just gap? tile positions?
+ - test each feature properly either on the server or against a local instance?
