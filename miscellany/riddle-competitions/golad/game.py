@@ -6,7 +6,7 @@ from bot import Bot
 
 
 class Game:
-    TICK_DURATION = 30  # we allow 30ms to pass between checks for input
+    TICK_DURATION = 100  # we allow 100ms to pass between checks for input
 
     def __init__(self, settings):
         self.settings = settings
@@ -47,13 +47,13 @@ class Game:
                 # if we are waiting and don't have a line, the other player is
                 # taking their turn, so keep building our search tree
                 if len(line) <= 0:
-                    game.bot.build_tree_for(cls.TICK_DURATION)
+                    game.bot.build_tree_for(cls.TICK_DURATION, game.settings['max_rounds'] - game.round)
                 elif line.startswith('update'):
                     game._handle_update(line)
                 elif line.startswith('action'):
                     # TODO: make time based decisions about building tree vs acting
                     t = game.settings['time_per_move'] - cls.TICK_DURATION
-                    game.bot.build_tree_for(t)
+                    game.bot.build_tree_for(t, game.settings['max_rounds'] - game.round)
                     game.bot.move()
                 elif line.startswith('quit'):
                     break
