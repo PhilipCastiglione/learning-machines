@@ -11,3 +11,4 @@ update game field .,.,.,1,.,0,.,.,.,.,.,0,.,1,.,.,1,.,.,.,.,.,.,.,0,.,.,1,1,.,.,
 update player0 living_cells 50
 update player1 living_cells 50
 action move 10000
+
