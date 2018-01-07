@@ -7,7 +7,7 @@ from field import Field
 
 
 class Game:
-    WAIT_DURATION = 30  # we allow 30ms to pass between checks for input
+    TICK_DURATION = 30  # we allow 30ms to pass between checks for input
 
     def __init__(self, settings):
         self.settings = settings
@@ -19,7 +19,7 @@ class Game:
         _, target, key, value = line.split()
 
         if target == 'game':
-            stderr.write('game update: {}\n'.format(line))  # TODO: remove
+            stderr.write('[GAME] game update: {}\n'.format(line))  # TODO: remove
             if key == 'round':
                 self.round = int(value)
             elif key == 'field':
@@ -28,7 +28,7 @@ class Game:
             else:
                 raise Exception('Unrecognised game update', line)
         elif target in self.settings['player_names']:
-            stderr.write('player update: {}\n'.format(line))  # TODO: remove
+            stderr.write('[GAME] player update: {}\n'.format(line))  # TODO: remove
             # no handling required
             pass
         else:
@@ -42,25 +42,23 @@ class Game:
 
     @classmethod
     def _run_engine(cls, game):
-        stderr.write(str(game.settings))  # TODO: remove
-
         while True:
             try:
-                line = stdin.readline().strip()
+                line = stdin.readline().lower().strip()
+                stderr.write('[GAME] line: {}\n'.format(line))  # TODO: remove
 
                 # if we are waiting and don't have a line, the other player is
                 # taking their turn, so keep building our search tree
                 if len(line) <= 0:
-                    stderr.write('wait: keep building tree\n')  # TODO: remove
-                    game.bot.build_tree_for(cls.WAIT_DURATION)
-                    break
+                    game.bot.build_tree_for(cls.TICK_DURATION)
                 elif line.startswith('update'):
-                    stderr.write('update: {}\n'.format(line))  # TODO: remove
                     game._handle_update(line)
                 elif line.startswith('action'):
-                    stderr.write('action: {}\n'.format(line))  # TODO: remove
                     # TODO: make time based decisions about building tree vs acting
-                    pass
+                    game.bot.build_tree_for(game.settings['time_per_move'] - cls.TICK_DURATION)
+                    game.bot.move()
+                elif line.startswith('quit'):
+                    break
                 else:
                     raise Exception('Unrecognised api message', line)
 
