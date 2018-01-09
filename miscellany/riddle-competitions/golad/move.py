@@ -4,8 +4,8 @@ from move_type import MoveType
 class Move:
     def __init__(self, field):
         self.move_type = field.move_type
-        self.target = field.target
-        self.sacrifice = field.sacrifice
+        # self.target = field.target
+        # self.sacrifice = field.sacrifice
 
     def __str__(self):
         if self.move_type == MoveType.BIRTH:

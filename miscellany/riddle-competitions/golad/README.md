@@ -1,8 +1,8 @@
 TODO:
  - document
- - next state - build and run generator for rainbow hash of next states
- - bot - build tree for NON NAIVE
+ - refactor field
  - field - build children
+ - bot - build tree for NON NAIVE
  - use frontier rather than resetting graph progress every time
  - game - timing
  - error handling
@@ -12,3 +12,4 @@ TODO:
  - confirm garbage collection on nodes works as expected
  - improve heuristic; consider more than just gap? tile positions?
  - test each feature properly either on the server or against a local instance?
+ - next state - build and run generator for rainbow hash of next states
