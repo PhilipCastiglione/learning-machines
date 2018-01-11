@@ -16,7 +16,8 @@ class Tree:
             next_node = next((n for n in self.current_node.children if n.field.state == state), None)
 
             if next_node == None:
-                raise Exception('Updating current node but node state not found in children')
+                # The opponent made a move we haven't explored (hopefully it was bad)
+                self.current_node = Node(state, False, None, None)
             else:
                 # Remove references to the parent so it and the next nodes siblings
                 # can be garbage collected.

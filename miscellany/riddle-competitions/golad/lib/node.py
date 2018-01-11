@@ -1,35 +1,49 @@
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 
+import settings
 from field import Field
 from rules import Rules
 from move_type import MoveType
 
 
 class Node:
-    def __init__(self, state, my_turn, parent, move_type):
-        self.field = Field(state)
+    def __init__(self, state, my_turn, parent, move_type, target=None):
+        self.field = Field(state, my_turn)
         self.my_turn = my_turn
         self.parent = parent
         self.move_type = move_type
+        self.target = target
         self.children = []
         self.minimax_value = self.field.heuristic_value
+        self.best_kill_moves = []
 
     def build_children(self):
         self._build_pass()
         self._build_kill()
+        self._filter_best_kill_moves()
         self._build_birth()
         self._update_minimax()
 
     def _build_pass(self):
         # passing doesn't change the intermediate state
-        intermediate_state = self.field.state
-        child_state = Rules.calculate_next_state(intermediate_state)
+        child_state = Rules.calculate_next_state(self.field.state)
         child = Node(child_state, not self.my_turn, self, MoveType.PASS)
         self.children.append(child)
 
     def _build_kill(self):
-        # TODO: implement
-        pass
+        for idx, cell in enumerate(self.field.state):
+            if cell != '.':
+                s = self.field.state
+                s = s[:idx] + '.' + s[(idx + 1):]
+                child_state = Rules.calculate_next_state(s)
+                child = Node(child_state, not self.my_turn, self, MoveType.KILL, idx)
+                if cell == settings.PLAYER_ID:
+                    self.best_kill_moves.append({'idx': idx, 'score': child.minimax_value})
+                self.children.append(child)
+
+    def _filter_best_kill_moves(self):
+        self.best_kill_moves.sort(key=itemgetter('score'))
+        self.best_kill_moves = self.best_kill_moves[-settings.TOP_KILL_COUNT:]
 
     def _build_birth(self):
         # TODO: implement

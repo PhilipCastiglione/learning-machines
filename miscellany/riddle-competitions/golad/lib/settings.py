@@ -1,8 +1,10 @@
 from sys import stdin
 import time
 
+# global constants
+TICK_DURATION = 100  # we allow 100ms to pass between checks for input
+TOP_KILL_COUNT = 10  # we only look at births for the 10 best kill moves
 # globals to be set when settings are parsed
-TICK_DURATION = None
 PLAYER_NAMES = None
 TIME_PER_MOVE = None
 PLAYER_ID = None
@@ -44,8 +46,8 @@ class Settings:
 
             if not line.startswith('settings'):
                 # The first message after the settings should be update game
-                # round 0, which we can safely throw away.
-                if not line == 'update game round 0':
+                # round X, which we can safely throw away.
+                if not line.startswith('update game round '):
                     raise Exception('Threw away important line')
                 break
             else:
@@ -69,7 +71,6 @@ class Settings:
     @staticmethod
     def _load_settings(settings):
         g = globals()
-        g['TICK_DURATION'] = 100  # we allow 100ms to pass between checks for input
         g['PLAYER_NAMES'] = settings['player_names']
         g['TIME_PER_MOVE'] = settings['time_per_move']
         g['PLAYER_ID'] = settings['your_botid']

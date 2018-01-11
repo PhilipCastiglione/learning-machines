@@ -1,11 +1,11 @@
 TODO:
  - document
+ - node - birth
+ - logging
  - bot - build tree for NON NAIVE
  - game - timing
- - use frontier rather than resetting graph progress every time
- - logging
- - lib structure
- - deploy pipe/script
- - improve heuristic; consider more than just gap? tile positions?
  - next state - build and run generator for the possible sets of strings for each type (each corners, sides, normal cell)
+ - use frontier rather than resetting graph progress every time
+ - improve heuristic; consider more than just gap? tile positions?
+ - lib structure
  - confirm garbage collection on nodes works as expected

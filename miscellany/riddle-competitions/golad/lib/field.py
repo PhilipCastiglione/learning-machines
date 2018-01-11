@@ -2,13 +2,20 @@ import settings
 
 
 class Field:
-    def __init__(self, state):
+    def __init__(self, state, my_turn):
         self.state = state
-        self.heuristic_value = self._calculate_heuristic()
+        self.heuristic_value = self._calculate_heuristic(my_turn)
 
-    def _calculate_heuristic(self):
-        cell_count = self.state.count(settings.PLAYER_ID)
-        opponent_cell_count = self.state.count(settings.OPPONENT_ID)
+    def _calculate_heuristic(self, my_turn):
+        if my_turn:
+            player_id = settings.PLAYER_ID
+            opponent_id = settings.OPPONENT_ID
+        else:
+            opponent_id = settings.PLAYER_ID
+            player_id = settings.OPPONENT_ID
+
+        cell_count = self.state.count(player_id)
+        opponent_cell_count = self.state.count(opponent_id)
 
         if opponent_cell_count == 0:
             # if the opponent has no cells left, this is a win, set to max
