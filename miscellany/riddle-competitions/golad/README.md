@@ -1,15 +1,11 @@
 TODO:
  - document
- - refactor field
- - field - build children
  - bot - build tree for NON NAIVE
- - use frontier rather than resetting graph progress every time
  - game - timing
- - error handling
+ - use frontier rather than resetting graph progress every time
  - logging
  - lib structure
  - deploy pipe/script
- - confirm garbage collection on nodes works as expected
  - improve heuristic; consider more than just gap? tile positions?
- - test each feature properly either on the server or against a local instance?
- - next state - build and run generator for rainbow hash of next states
+ - next state - build and run generator for the possible sets of strings for each type (each corners, sides, normal cell)
+ - confirm garbage collection on nodes works as expected
