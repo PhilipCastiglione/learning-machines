@@ -17,23 +17,21 @@ class Bot:
         if not self.tree.current_node.children:
             self.tree.current_node.build_children()
 
-        if 1000 * (time.perf_counter() - now) >= duration:
-            return
+        # OH NO YOU HAVE NO CPU
+        #if 1000 * (time.perf_counter() - now) >= duration:
+            #return
 
-        for c in self.tree.current_node.children:
-            if not c.children:
-                c.build_children()
+        #for c in self.tree.current_node.children:
+            #if not c.children:
+                #c.build_children()
 
-        if 1000 * (time.perf_counter() - now) >= duration:
-            return
+        #if 1000 * (time.perf_counter() - now) >= duration:
+            #return
 
-        for c in self.tree.current_node.children:
-            for c2 in c.children:
-                if not c2.children:
-                    c2.build_children()
-
-        if 1000 * (time.perf_counter() - now) >= duration:
-            return
+        #for c in self.tree.current_node.children:
+            #for c2 in c.children:
+                #if not c2.children:
+                    #c2.build_children()
 
     def move(self):
         # pick the best move from the available children

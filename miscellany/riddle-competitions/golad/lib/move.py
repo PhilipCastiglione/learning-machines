@@ -6,12 +6,14 @@ class Move:
     def __init__(self, node):
         self.move_type = node.move_type
         self.target = node.target
-        # self.sacrifice = node.sacrifice
+        self.sacrifice = node.sacrifice
 
     def __str__(self):
         if self.move_type == MoveType.BIRTH:
-            sacrifice_string = ' '.join(str(p) for p in self.sacrifice)
-            return '{} {} {}'.format(self.move_type, self.target, sacrifice_string)
+            target_string = "{},{}".format(self.target % settings.COLUMNS, self.target // settings.COLUMNS)
+            sacrifice_string = "{},{}".format(self.sacrifice[0] % settings.COLUMNS, self.sacrifice[0] // settings.COLUMNS)
+            sacrifice_string += " {},{}".format(self.sacrifice[1] % settings.COLUMNS, self.sacrifice[1] // settings.COLUMNS)
+            return '{} {} {}'.format(self.move_type, target_string, sacrifice_string)
         elif self.move_type == MoveType.KILL:
             target_string = "{},{}".format(self.target % settings.COLUMNS, self.target // settings.COLUMNS)
             return '{} {}'.format(self.move_type, target_string)
