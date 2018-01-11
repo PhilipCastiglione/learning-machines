@@ -1,5 +1,5 @@
-from sys import stderr
 from operator import attrgetter, itemgetter
+import itertools
 
 import settings
 from field import Field
@@ -20,23 +20,11 @@ class Node:
         self.best_kill_moves = []
 
     def build_children(self):
-        stderr.write('building children\n')
-        stderr.flush()
         self._build_pass()
-        stderr.write('built pass\n')
-        stderr.flush()
         self._build_kill()
-        stderr.write('built kill\n')
-        stderr.flush()
         self._filter_best_kill_moves()
-        stderr.write('filtered kill\n')
-        stderr.flush()
         self._build_birth()
-        stderr.write('built birth\n')
-        stderr.flush()
         self._update_minimax()
-        stderr.write('updated minimax\n')
-        stderr.flush()
 
     def _build_pass(self):
         # passing doesn't change the intermediate state
@@ -60,18 +48,19 @@ class Node:
         self.best_kill_moves = self.best_kill_moves[-settings.TOP_KILL_COUNT:]
 
     def _build_birth(self):
-        for b_idx, cell in enumerate(self.field.state):
+        for idx, cell in enumerate(self.field.state):
             if cell == '.':
-                for k_idx, best_kill_move in enumerate(self.best_kill_moves):
-                    for k_idx2, best_kill_move2 in enumerate(self.best_kill_moves):
-                        if k_idx != k_idx2:
-                            s = self.field.state
-                            s = s[:b_idx] + settings.PLAYER_ID + s[(b_idx + 1):]
-                            s = s[:k_idx] + '.' + s[(k_idx + 1):]
-                            s = s[:k_idx2] + '.' + s[(k_idx2 + 1):]
-                            child_state = Rules.calculate_next_state(s)
-                            child = Node(child_state, not self.my_turn, self, MoveType.BIRTH, b_idx, (k_idx, k_idx2))
-                            self.children.append(child)
+                for a, b in itertools.combinations(self.best_kill_moves, 2):
+                    a_idx = a['idx']
+                    b_idx = b['idx']
+
+                    s = self.field.state
+                    s = s[:idx] + settings.PLAYER_ID + s[(idx + 1):]
+                    s = s[:a_idx] + '.' + s[(a_idx + 1):]
+                    s = s[:b_idx] + '.' + s[(b_idx + 1):]
+                    child_state = Rules.calculate_next_state(s)
+                    child = Node(child_state, not self.my_turn, self, MoveType.BIRTH, idx, (a_idx, b_idx))
+                    self.children.append(child)
 
     def _update_minimax(self):
         if self.my_turn:

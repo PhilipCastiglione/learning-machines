@@ -1,4 +1,5 @@
 import settings
+import next_cell_states
 
 
 class Rules:
@@ -7,10 +8,12 @@ class Rules:
         next_state = ''
         for row in range(settings.ROWS):
             for col in range(settings.COLUMNS):
+                current_cell_state = state[settings.ROWS * row + col]
+
                 neighbours = cls._get_neighbours(state, row, col)
                 count = neighbours['count']
-                if (count == 2 or count == 3) and cls._cell(state, row, col) != '.':
-                    next_cell_state = cls._cell(state, row, col)
+                if (count == 2 or count == 3) and current_cell_state!= '.':
+                    next_cell_state = current_cell_state
                 elif count == 3:
                     next_cell_state = neighbours['majority']
                 else:
@@ -20,66 +23,55 @@ class Rules:
 
     @classmethod
     def _get_neighbours(cls, state, r, c):
-        neighbour_cells = []
-        # :(
+        neighbours = ''
         if r > 0 and r < settings.ROWS and c > 0 and c < settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r - 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 1))
+            # full cell
+            neighbours += state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
+            neighbours += state[settings.ROWS * r + c - 1]
+            neighbours += state[settings.ROWS * r + c + 1]
+            neighbours += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
+            return next_cell_states.full_cell[neighbours]
         elif r == 0 and c > 0 and c < settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 1))
+            # top edge
+            neighbours += state[settings.ROWS * r + c - 1]
+            neighbours += state[settings.ROWS * r + c + 1]
+            neighbours += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
+            return next_cell_states.edge_cell[neighbours]
         elif r == settings.ROWS and c > 0 and c < settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r - 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
+            # bottom edge
+            neighbours += state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
+            neighbours += state[settings.ROWS * r + c - 1]
+            neighbours += state[settings.ROWS * r + c + 1]
+            return next_cell_states.edge_cell[neighbours]
         elif r > 0 and r < settings.ROWS and c == 0:
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 1))
+            # left edge
+            neighbours += state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
+            neighbours += state[settings.ROWS * r + c + 1]
+            neighbours += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
+            return next_cell_states.edge_cell[neighbours]
         elif r > 0 and r < settings.ROWS and c == settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r - 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
+            # right edge
+            neighbours += state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
+            neighbours += state[settings.ROWS * r + c - 1]
+            neighbours += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
+            return next_cell_states.edge_cell[neighbours]
         elif r == 0 and c == 0:
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 1))
+            # top left corner
+            neighbours += state[settings.ROWS * r + c + 1]
+            neighbours += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
+            return next_cell_states.corner_cell[neighbours]
         elif r == 0 and c == settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r + 1, c + 0))
+            # top right corner
+            neighbours += state[settings.ROWS * r + c - 1]
+            neighbours += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
+            return next_cell_states.corner_cell[neighbours]
         elif r == settings.ROWS and c == 0:
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 1))
-            neighbour_cells.append(cls._cell(state, r + 0, c + 1))
+            # bottom left corner
+            neighbours += state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
+            neighbours += state[settings.ROWS * r + c + 1]
+            return next_cell_states.corner_cell[neighbours]
         elif r == settings.ROWS and c == settings.COLUMNS:
-            neighbour_cells.append(cls._cell(state, r - 1, c - 1))
-            neighbour_cells.append(cls._cell(state, r - 1, c + 0))
-            neighbour_cells.append(cls._cell(state, r + 0, c - 1))
-
-        neighbours = {}
-        neighbours['count'] = len(neighbour_cells) - neighbour_cells.count('.')
-        if neighbour_cells.count('1') > neighbour_cells.count('0'):
-            neighbours['majority'] = '1'
-        else:
-            neighbours['majority'] = '0'
-        return neighbours
-
-    @staticmethod
-    def _cell(state, r, c):
-        return state[settings.ROWS * r + c]
+            # bottom right corner
+            neighbours += state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
+            neighbours += state[settings.ROWS * r + c - 1]
+            return next_cell_states.corner_cell[neighbours]
