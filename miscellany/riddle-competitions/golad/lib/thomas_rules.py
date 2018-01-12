@@ -5,8 +5,7 @@ import next_cell_states
 class Rules:
     @classmethod
     def calculate_next_state(cls, state):
-        state = state.encode('ascii') # much faster to index than unicode is
-
+        state = bytearray(state, 'ascii') # much faster to index than unicode, and updatable in place
         w = settings.COLUMNS
         h = settings.ROWS
         
@@ -16,7 +15,7 @@ class Rules:
         col = 0
         row = 0
         for cell in state:
-            if cell == b'0':
+            if cell == 48:
                 if col > 0 and row > 0:
                     neighbours0[h*(row-1)+(col-1)] += 1
                 if row > 0:
@@ -33,7 +32,7 @@ class Rules:
                     neighbours0[h*(row+1)+(col)] += 1
                 if col < w-1 and row < h-1:
                     neighbours0[h*(row+1)+(col+1)] += 1
-            elif cell == b'1':
+            elif cell == 49:
                 if col > 0 and row > 0:
                     neighbours1[h*(row-1)+(col-1)] += 1
                 if row > 0:
@@ -50,26 +49,22 @@ class Rules:
                     neighbours1[h*(row+1)+(col)] += 1
                 if col < w-1 and row < h-1:
                     neighbours1[h*(row+1)+(col+1)] += 1
-            if col == w-1:
+            col += 1
+            if col == w:
                 row += 1
                 col = 0
-            else:
-                col += 1
-
+        
         # pass 2: build new state from old + neighbours
-        next_cells = [''] * (w * h)
         idx = 0
         for cell in state:
             neighbours = neighbours0[idx] + neighbours1[idx]
             if cell == '.' and neighbours == 3: # birth
-                next_cells[idx] = b'0' if neighbours0[idx] > neighbours1[idx] else b'1' 
+                state[idx] = 48 if neighbours0[idx] > neighbours1[idx] else 49
             elif cell != '.' and (neighbours < 2 or neighbours > 3): # death
-                next_cells[idx] = b'.' 
-            else:
-                next_cells[idx] = cell
+                state[idx] = 46
             idx += 1
 
-        return b''.join(next_cells).decode('ascii')
+        return state.decode('ascii')
 
     def calculate_heuristic(state, my_turn):
         if my_turn:
