@@ -17,51 +17,51 @@ class ThomasRules:
     def _get_next_cell_state(state, r, c):
         if r > 0 and r < settings.ROWS and c > 0 and c < settings.COLUMNS:
             # full cell
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
+            cell_region = state[settings.ROWS * (r - 1) + c - 1]
+            cell_region += state[settings.ROWS * r + c - 1]
+            cell_region += state[settings.ROWS * (r + 1) + c - 1]
             return '.'
         elif r == 0 and c > 0 and c < settings.COLUMNS:
             # top edge
-            cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
+            cell_region = state[settings.ROWS * r + c - 1]
+            cell_region += state[settings.ROWS * (r + 1) + c - 1]
             return '.'
         elif r == settings.ROWS and c > 0 and c < settings.COLUMNS:
             # bottom edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
+            cell_region = state[settings.ROWS * (r - 1) + c - 1]
+            cell_region += state[settings.ROWS * r + c - 1]
             return '.'
         elif r > 0 and r < settings.ROWS and c == 0:
             # left edge
-            cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
+            cell_region = state[settings.ROWS * (r - 1) + c]
+            cell_region += state[settings.ROWS * r + c]
+            cell_region += state[settings.ROWS * (r + 1) + c]
             return '.'
         elif r > 0 and r < settings.ROWS and c == settings.COLUMNS:
             # right edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
+            cell_region = state[settings.ROWS * (r - 1) + c - 1]
+            cell_region += state[settings.ROWS * r + c - 1]
+            cell_region += state[settings.ROWS * (r + 1) + c - 1]
             return '.'
         elif r == 0 and c == 0:
             # top left corner
-            cell_region = state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
+            cell_region = state[settings.ROWS * r + c]
+            cell_region += state[settings.ROWS * (r + 1) + c]
             return '.'
         elif r == 0 and c == settings.COLUMNS:
             # top right corner
-            cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
+            cell_region = state[settings.ROWS * r + c - 1]
+            cell_region += state[settings.ROWS * (r + 1) + c - 1]
             return '.'
         elif r == settings.ROWS and c == 0:
             # bottom left corner
-            cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
+            cell_region = state[settings.ROWS * (r - 1) + c]
+            cell_region += state[settings.ROWS * r + c]
             return '.'
         elif r == settings.ROWS and c == settings.COLUMNS:
             # bottom right corner
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
+            cell_region = state[settings.ROWS * (r - 1) + c - 1]
+            cell_region += state[settings.ROWS * r + c - 1]
             return '.'
 
     def calculate_heuristic(state, my_turn):
