@@ -20,49 +20,49 @@ class ThomasRules:
             cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
             cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
             cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.middle[cell_region]
+            return '.'
         elif r == 0 and c > 0 and c < settings.COLUMNS:
             # top edge
             cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
             cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.top[cell_region]
+            return '.'
         elif r == settings.ROWS and c > 0 and c < settings.COLUMNS:
             # bottom edge
             cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
             cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            return next_cell_states.bottom[cell_region]
+            return '.'
         elif r > 0 and r < settings.ROWS and c == 0:
             # left edge
             cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
             cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
             cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.left[cell_region]
+            return '.'
         elif r > 0 and r < settings.ROWS and c == settings.COLUMNS:
             # right edge
             cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
             cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
             cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
-            return next_cell_states.right[cell_region]
+            return '.'
         elif r == 0 and c == 0:
             # top left corner
             cell_region = state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
             cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.top_left[cell_region]
+            return '.'
         elif r == 0 and c == settings.COLUMNS:
             # top right corner
             cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
             cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
-            return next_cell_states.top_right[cell_region]
+            return '.'
         elif r == settings.ROWS and c == 0:
             # bottom left corner
             cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
             cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            return next_cell_states.bottom_left[cell_region]
+            return '.'
         elif r == settings.ROWS and c == settings.COLUMNS:
             # bottom right corner
             cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
             cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            return next_cell_states.bottom_right[cell_region]
+            return '.'
 
     def calculate_heuristic(state, my_turn):
         if my_turn:
