@@ -3,6 +3,14 @@
 
 from game import Game
 from settings import Settings
+import time
+
+def bench(name, f):
+    before = time.perf_counter()
+    f()
+    after = time.perf_counter()
+    elapsed = (after - before) * 1000
+    print(f'{name}: {elapsed}ms')
 
 if __name__ == '__main__':
     # mock settings
@@ -27,5 +35,6 @@ if __name__ == '__main__':
     game._handle_update("update player1 living_cells 50")
 
     # run one move
-    game.current_node.build_children()
-    game.move()
+    bench('build_children', game.current_node.build_children)
+    bench('move', game.move)
+
