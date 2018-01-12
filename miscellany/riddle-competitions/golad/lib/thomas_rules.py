@@ -5,10 +5,12 @@ import next_cell_states
 class ThomasRules:
     @classmethod
     def calculate_next_state(cls, state):
-        next_state = []
+        next_state = [''] * 288
+        i = 0
         for row in range(settings.ROWS):
             for col in range(settings.COLUMNS):
-                next_state.append(cls._get_next_cell_state(state, row, col))
+                next_state[i] = cls._get_next_cell_state(state, row, col)
+                i += 1
         return ''.join(next_state)
 
     @staticmethod
