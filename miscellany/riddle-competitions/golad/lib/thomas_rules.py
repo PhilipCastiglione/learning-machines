@@ -2,14 +2,14 @@ import settings
 import next_cell_states
 
 
-class Rules:
+class ThomasRules:
     @classmethod
     def calculate_next_state(cls, state):
-        next_state = ''
+        next_state = []
         for row in range(settings.ROWS):
             for col in range(settings.COLUMNS):
-                next_state += cls._get_next_cell_state(state, row, col)
-        return next_state
+                next_state.append(cls._get_next_cell_state(state, row, col))
+        return ''.join(next_state)
 
     @staticmethod
     def _get_next_cell_state(state, r, c):
