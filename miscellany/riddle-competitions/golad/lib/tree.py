@@ -13,7 +13,7 @@ class Tree:
             self.current_node = Node(state, my_turn, None, None)
         else:
             # Find the next node, using the node state, in the current node's children.
-            next_node = next((n for n in self.current_node.children if n.field.state == state), None)
+            next_node = next((n for n in self.current_node.children if n.state == state), None)
 
             if next_node == None:
                 # The opponent made a move we haven't explored (hopefully it was bad)

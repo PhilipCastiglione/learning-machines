@@ -3,10 +3,10 @@ from move_type import MoveType
 
 
 class Move:
-    def __init__(self, node):
-        self.move_type = node.move_type
-        self.target = node.target
-        self.sacrifice = node.sacrifice
+    def __init__(self, move_type, target, sacrifice):
+        self.move_type = move_type
+        self.target = target
+        self.sacrifice = sacrifice
 
     def __str__(self):
         if self.move_type == MoveType.BIRTH:

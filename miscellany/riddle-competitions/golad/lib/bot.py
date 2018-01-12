@@ -2,7 +2,6 @@ from sys import stdout
 import time
 from operator import attrgetter
 
-from move import Move
 from tree import Tree
 
 
@@ -36,6 +35,5 @@ class Bot:
     def move(self):
         # pick the best move from the available children
         node = max(self.tree.current_node.children, key=attrgetter('minimax_value'))
-        move = Move(node)
-        stdout.write('{}\n'.format(move))
+        stdout.write('{}\n'.format(node.move))
         stdout.flush()

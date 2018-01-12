@@ -1,7 +1,7 @@
 TODO:
  - document
- - next state - build and run generator for the possible sets of strings for each type (each corners, sides, normal cell)
- - test birthing
+ - write tests
+ - test recent changes
  - bot - build tree better? do you have time?
  - game - timing
  - use frontier rather than resetting graph progress every time

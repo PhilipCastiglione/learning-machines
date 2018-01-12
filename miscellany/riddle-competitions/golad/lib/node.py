@@ -2,21 +2,19 @@ from operator import attrgetter, itemgetter
 import itertools
 
 import settings
-from field import Field
 from rules import Rules
+from move import Move
 from move_type import MoveType
 
 
 class Node:
     def __init__(self, state, my_turn, parent, move_type, target=None, sacrifice=None):
-        self.field = Field(state, my_turn)
+        self.state = state
+        self.minimax_value = Rules.calculate_heuristic(state, my_turn)
         self.my_turn = my_turn
         self.parent = parent
-        self.move_type = move_type
-        self.target = target
-        self.sacrifice = sacrifice
         self.children = []
-        self.minimax_value = self.field.heuristic_value
+        self.move = Move(move_type, target, sacrifice)
         self.best_kill_moves = []
 
     def build_children(self):
@@ -28,14 +26,14 @@ class Node:
 
     def _build_pass(self):
         # passing doesn't change the intermediate state
-        child_state = Rules.calculate_next_state(self.field.state)
+        child_state = Rules.calculate_next_state(self.state)
         child = Node(child_state, not self.my_turn, self, MoveType.PASS)
         self.children.append(child)
 
     def _build_kill(self):
-        for idx, cell in enumerate(self.field.state):
+        for idx, cell in enumerate(self.state):
             if cell != '.':
-                s = self.field.state
+                s = self.state
                 s = s[:idx] + '.' + s[(idx + 1):]
                 child_state = Rules.calculate_next_state(s)
                 child = Node(child_state, not self.my_turn, self, MoveType.KILL, idx)
@@ -48,13 +46,13 @@ class Node:
         self.best_kill_moves = self.best_kill_moves[-settings.TOP_KILL_COUNT:]
 
     def _build_birth(self):
-        for idx, cell in enumerate(self.field.state):
+        for idx, cell in enumerate(self.state):
             if cell == '.':
                 for a, b in itertools.combinations(self.best_kill_moves, 2):
                     a_idx = a['idx']
                     b_idx = b['idx']
 
-                    s = self.field.state
+                    s = self.state
                     s = s[:idx] + settings.PLAYER_ID + s[(idx + 1):]
                     s = s[:a_idx] + '.' + s[(a_idx + 1):]
                     s = s[:b_idx] + '.' + s[(b_idx + 1):]
