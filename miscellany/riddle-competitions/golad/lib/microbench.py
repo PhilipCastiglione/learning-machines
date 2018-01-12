@@ -4,6 +4,7 @@ import time
 from game import Game
 from settings import Settings
 from rules import Rules
+from thomas_rules import ThomasRules
 
 def bench(name, f):
     before = time.perf_counter()
@@ -35,15 +36,6 @@ if __name__ == '__main__':
     # repeatedly calculate immutable states from the original one
     first_state = game.current_node.state
 
-    def calc1():
-        Rules.calculate_next_state(first_state)
-    bench('calc1', calc1)
-
-    def calc10():
-        for i in range(1, 10):
-            Rules.calculate_next_state(first_state)
-    bench('calc10', calc10)
-
     def calc100():
         for i in range(1, 100):
             Rules.calculate_next_state(first_state)
@@ -53,3 +45,13 @@ if __name__ == '__main__':
         for i in range(1, 1000):
             Rules.calculate_next_state(first_state)
     bench('calc1000', calc1000)
+
+    def thomas100():
+        for i in range(1, 100):
+            ThomasRules.calculate_next_state(first_state)
+    bench('thomas100', thomas100)
+
+    def thomas1000():
+        for i in range(1, 1000):
+            ThomasRules.calculate_next_state(first_state)
+    bench('thomas1000', thomas1000)
