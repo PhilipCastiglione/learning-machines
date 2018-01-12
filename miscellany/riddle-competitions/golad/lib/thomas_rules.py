@@ -2,67 +2,74 @@ import settings
 import next_cell_states
 
 
-class ThomasRules:
+class Rules:
     @classmethod
     def calculate_next_state(cls, state):
-        next_state = [''] * 288
-        i = 0
-        for row in range(16):
-            for col in range(settings.COLUMNS):
-                next_state[i] = cls._get_next_cell_state(state, row, col)
-                i += 1
-        return ''.join(next_state)
+        state = state.encode('ascii') # much faster to index than unicode is
 
-    @staticmethod
-    def _get_next_cell_state(state, r, c):
-        if r > 0 and r < 16 and c > 0 and c < settings.COLUMNS:
-            # full cell
-            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 2]
-            cell_region += state[16 * r + c - 1:16 * r + c + 2]
-            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 2]
-            return next_cell_states.middle[cell_region]
-        elif r == 0 and c > 0 and c < settings.COLUMNS:
-            # top edge
-            cell_region = state[16 * r + c - 1:16 * r + c + 2]
-            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 2]
-            return next_cell_states.top[cell_region]
-        elif r == 16 and c > 0 and c < settings.COLUMNS:
-            # bottom edge
-            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 2]
-            cell_region += state[16 * r + c - 1:16 * r + c + 2]
-            return next_cell_states.bottom[cell_region]
-        elif r > 0 and r < 16 and c == 0:
-            # left edge
-            cell_region = state[16 * (r - 1) + c:16 * (r - 1) + c + 2]
-            cell_region += state[16 * r + c:16 * r + c + 2]
-            cell_region += state[16 * (r + 1) + c:16 * (r + 1) + c + 2]
-            return next_cell_states.left[cell_region]
-        elif r > 0 and r < 16 and c == settings.COLUMNS:
-            # right edge
-            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 1]
-            cell_region += state[16 * r + c - 1:16 * r + c + 1]
-            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 1]
-            return next_cell_states.right[cell_region]
-        elif r == 0 and c == 0:
-            # top left corner
-            cell_region = state[16 * r + c:16 * r + c + 2]
-            cell_region += state[16 * (r + 1) + c:16 * (r + 1) + c + 2]
-            return next_cell_states.top_left[cell_region]
-        elif r == 0 and c == settings.COLUMNS:
-            # top right corner
-            cell_region = state[16 * r + c - 1:16 * r + c + 1]
-            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 1]
-            return next_cell_states.top_right[cell_region]
-        elif r == 16 and c == 0:
-            # bottom left corner
-            cell_region = state[16 * (r - 1) + c:16 * (r - 1) + c + 2]
-            cell_region += state[16 * r + c:16 * r + c + 2]
-            return next_cell_states.bottom_left[cell_region]
-        elif r == 16 and c == settings.COLUMNS:
-            # bottom right corner
-            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 1]
-            cell_region += state[16 * r + c - 1:16 * r + c + 1]
-            return next_cell_states.bottom_right[cell_region]
+        w = settings.COLUMNS
+        h = settings.ROWS
+        
+        # pass 1: count neighbours
+        neighbours0 = [0] * (w * h)
+        neighbours1 = [0] * (w * h)
+        col = 0
+        row = 0
+        for cell in state:
+            if cell == b'0':
+                if col > 0 and row > 0:
+                    neighbours0[h*(row-1)+(col-1)] += 1
+                if row > 0:
+                    neighbours0[h*(row-1)+(col)] += 1
+                if col < w-1 and row > 0:
+                    neighbours0[h*(row-1)+(col+1)] += 1
+                if col > 0:
+                    neighbours0[h*(row)+(col-1)] += 1
+                if col < w-1:
+                    neighbours0[h*(row)+(col+1)] += 1
+                if col > 0 and row < h-1:
+                    neighbours0[h*(row+1)+(col-1)] += 1
+                if row < h-1:
+                    neighbours0[h*(row+1)+(col)] += 1
+                if col < w-1 and row < h-1:
+                    neighbours0[h*(row+1)+(col+1)] += 1
+            elif cell == b'1':
+                if col > 0 and row > 0:
+                    neighbours1[h*(row-1)+(col-1)] += 1
+                if row > 0:
+                    neighbours1[h*(row-1)+(col)] += 1
+                if col < w-1 and row > 0:
+                    neighbours1[h*(row-1)+(col+1)] += 1
+                if col > 0:
+                    neighbours1[h*(row)+(col-1)] += 1
+                if col < w-1:
+                    neighbours1[h*(row)+(col+1)] += 1
+                if col > 0 and row < h-1:
+                    neighbours1[h*(row+1)+(col-1)] += 1
+                if row < h-1:
+                    neighbours1[h*(row+1)+(col)] += 1
+                if col < w-1 and row < h-1:
+                    neighbours1[h*(row+1)+(col+1)] += 1
+            if col == w-1:
+                row += 1
+                col = 0
+            else:
+                col += 1
+
+        # pass 2: build new state from old + neighbours
+        next_cells = [''] * (w * h)
+        idx = 0
+        for cell in state:
+            neighbours = neighbours0[idx] + neighbours1[idx]
+            if cell == '.' and neighbours == 3: # birth
+                next_cells[idx] = b'0' if neighbours0[idx] > neighbours1[idx] else b'1' 
+            elif cell != '.' and (neighbours < 2 or neighbours > 3): # death
+                next_cells[idx] = b'.' 
+            else:
+                next_cells[idx] = cell
+            idx += 1
+
+        return b''.join(next_cells).decode('ascii')
 
     def calculate_heuristic(state, my_turn):
         if my_turn:

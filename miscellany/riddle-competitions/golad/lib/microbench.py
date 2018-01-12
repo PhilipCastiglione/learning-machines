@@ -4,7 +4,7 @@ import time
 from game import Game
 from settings import Settings
 from rules import Rules
-from thomas_rules import ThomasRules
+from thomas_rules import Rules as ThomasRules
 
 def bench(name, f):
     before = time.perf_counter()
@@ -36,6 +36,16 @@ if __name__ == '__main__':
     # repeatedly calculate immutable states from the original one
     first_state = game.current_node.state
 
+    def cell28800(): # comparable to calc100 without concatenation
+        for i in range(1, 28800):
+            Rules._get_next_cell_state(first_state, 3, 3)
+    bench('cell28800', cell28800)
+
+    def cell288000(): 
+        for i in range(1, 288000):
+            Rules._get_next_cell_state(first_state, 3, 3)
+    bench('cell288000', cell288000)
+
     def calc100():
         for i in range(1, 100):
             Rules.calculate_next_state(first_state)
@@ -55,23 +65,3 @@ if __name__ == '__main__':
         for i in range(1, 1000):
             ThomasRules.calculate_next_state(first_state)
     bench('thomas1000', thomas1000)
-
-    def cell28800(): # comparable to calc100 without concatenation
-        for i in range(1, 28800):
-            Rules._get_next_cell_state(first_state, 3, 3)
-    bench('cell28800', cell28800)
-
-    def cell288000(): 
-        for i in range(1, 288000):
-            Rules._get_next_cell_state(first_state, 3, 3)
-    bench('cell288000', cell288000)
-
-    def thomas28800(): 
-        for i in range(1, 28800):
-            ThomasRules._get_next_cell_state(first_state, 3, 3)
-    bench('thomas28800', thomas28800)
-
-    def thomas288000(): 
-        for i in range(1, 288000):
-            ThomasRules._get_next_cell_state(first_state, 3, 3)
-    bench('thomas288000', thomas288000)
