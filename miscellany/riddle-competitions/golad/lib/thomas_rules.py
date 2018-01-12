@@ -7,7 +7,7 @@ class ThomasRules:
     def calculate_next_state(cls, state):
         next_state = [''] * 288
         i = 0
-        for row in range(settings.ROWS):
+        for row in range(16):
             for col in range(settings.COLUMNS):
                 next_state[i] = cls._get_next_cell_state(state, row, col)
                 i += 1
@@ -15,54 +15,54 @@ class ThomasRules:
 
     @staticmethod
     def _get_next_cell_state(state, r, c):
-        if r > 0 and r < settings.ROWS and c > 0 and c < settings.COLUMNS:
+        if r > 0 and r < 16 and c > 0 and c < settings.COLUMNS:
             # full cell
-            cell_region = state[settings.ROWS * (r - 1) + c - 1]
-            cell_region += state[settings.ROWS * r + c - 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1]
-            return '.'
+            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 2]
+            cell_region += state[16 * r + c - 1:16 * r + c + 2]
+            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 2]
+            return next_cell_states.middle[cell_region]
         elif r == 0 and c > 0 and c < settings.COLUMNS:
             # top edge
-            cell_region = state[settings.ROWS * r + c - 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1]
-            return '.'
-        elif r == settings.ROWS and c > 0 and c < settings.COLUMNS:
+            cell_region = state[16 * r + c - 1:16 * r + c + 2]
+            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 2]
+            return next_cell_states.top[cell_region]
+        elif r == 16 and c > 0 and c < settings.COLUMNS:
             # bottom edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1]
-            cell_region += state[settings.ROWS * r + c - 1]
-            return '.'
-        elif r > 0 and r < settings.ROWS and c == 0:
+            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 2]
+            cell_region += state[16 * r + c - 1:16 * r + c + 2]
+            return next_cell_states.bottom[cell_region]
+        elif r > 0 and r < 16 and c == 0:
             # left edge
-            cell_region = state[settings.ROWS * (r - 1) + c]
-            cell_region += state[settings.ROWS * r + c]
-            cell_region += state[settings.ROWS * (r + 1) + c]
-            return '.'
-        elif r > 0 and r < settings.ROWS and c == settings.COLUMNS:
+            cell_region = state[16 * (r - 1) + c:16 * (r - 1) + c + 2]
+            cell_region += state[16 * r + c:16 * r + c + 2]
+            cell_region += state[16 * (r + 1) + c:16 * (r + 1) + c + 2]
+            return next_cell_states.left[cell_region]
+        elif r > 0 and r < 16 and c == settings.COLUMNS:
             # right edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1]
-            cell_region += state[settings.ROWS * r + c - 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1]
-            return '.'
+            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 1]
+            cell_region += state[16 * r + c - 1:16 * r + c + 1]
+            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 1]
+            return next_cell_states.right[cell_region]
         elif r == 0 and c == 0:
             # top left corner
-            cell_region = state[settings.ROWS * r + c]
-            cell_region += state[settings.ROWS * (r + 1) + c]
-            return '.'
+            cell_region = state[16 * r + c:16 * r + c + 2]
+            cell_region += state[16 * (r + 1) + c:16 * (r + 1) + c + 2]
+            return next_cell_states.top_left[cell_region]
         elif r == 0 and c == settings.COLUMNS:
             # top right corner
-            cell_region = state[settings.ROWS * r + c - 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1]
-            return '.'
-        elif r == settings.ROWS and c == 0:
+            cell_region = state[16 * r + c - 1:16 * r + c + 1]
+            cell_region += state[16 * (r + 1) + c - 1:16 * (r + 1) + c + 1]
+            return next_cell_states.top_right[cell_region]
+        elif r == 16 and c == 0:
             # bottom left corner
-            cell_region = state[settings.ROWS * (r - 1) + c]
-            cell_region += state[settings.ROWS * r + c]
-            return '.'
-        elif r == settings.ROWS and c == settings.COLUMNS:
+            cell_region = state[16 * (r - 1) + c:16 * (r - 1) + c + 2]
+            cell_region += state[16 * r + c:16 * r + c + 2]
+            return next_cell_states.bottom_left[cell_region]
+        elif r == 16 and c == settings.COLUMNS:
             # bottom right corner
-            cell_region = state[settings.ROWS * (r - 1) + c - 1]
-            cell_region += state[settings.ROWS * r + c - 1]
-            return '.'
+            cell_region = state[16 * (r - 1) + c - 1:16 * (r - 1) + c + 1]
+            cell_region += state[16 * r + c - 1:16 * r + c + 1]
+            return next_cell_states.bottom_right[cell_region]
 
     def calculate_heuristic(state, my_turn):
         if my_turn:
@@ -77,7 +77,7 @@ class ThomasRules:
 
         if opponent_cell_count == 0:
             # if the opponent has no cells left, this is a win, set to max
-            value = settings.ROWS * settings.COLUMNS
+            value = 16 * settings.COLUMNS
         elif cell_count == 0:
             # if you have no cells left, this is a loss, set to min
             value = 0
