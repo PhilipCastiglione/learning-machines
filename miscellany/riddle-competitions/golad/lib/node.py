@@ -26,16 +26,18 @@ class Node:
 
     def _build_pass(self):
         # passing doesn't change the intermediate state
-        child_state = Rules.calculate_next_state(self.state)
+        child_state = self.state.copy()
+        Rules.calculate_next_state(child_state)
         child = Node(child_state, not self.my_turn, self, MoveType.PASS)
         self.children.append(child)
 
     def _build_kill(self):
         for idx, cell in enumerate(self.state):
-            if cell != '.':
-                s = self.state
-                s = s[:idx] + '.' + s[(idx + 1):]
-                child_state = Rules.calculate_next_state(s)
+            if cell != 46:
+                child_state = self.state.copy()
+                child_state[idx] = 46
+                Rules.calculate_next_state(child_state)
+
                 child = Node(child_state, not self.my_turn, self, MoveType.KILL, idx)
                 if cell == settings.PLAYER_ID:
                     self.best_kill_moves.append({'idx': idx, 'score': child.minimax_value})
@@ -47,16 +49,17 @@ class Node:
 
     def _build_birth(self):
         for idx, cell in enumerate(self.state):
-            if cell == '.':
+            if cell == 46:
                 for a, b in itertools.combinations(self.best_kill_moves, 2):
                     a_idx = a['idx']
                     b_idx = b['idx']
 
-                    s = self.state
-                    s = s[:idx] + settings.PLAYER_ID + s[(idx + 1):]
-                    s = s[:a_idx] + '.' + s[(a_idx + 1):]
-                    s = s[:b_idx] + '.' + s[(b_idx + 1):]
-                    child_state = Rules.calculate_next_state(s)
+                    child_state = self.state.copy()
+                    child_state[idx] = settings.PLAYER_ID
+                    child_state[a_idx] = 46
+                    child_state[b_idx] = 46
+                    Rules.calculate_next_state(child_state)
+
                     child = Node(child_state, not self.my_turn, self, MoveType.BIRTH, idx, (a_idx, b_idx))
                     self.children.append(child)
 
