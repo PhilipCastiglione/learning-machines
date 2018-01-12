@@ -5,7 +5,7 @@ import next_cell_states
 class Rules:
     @classmethod
     def calculate_next_state(cls, state):
-        state = bytearray(state, 'ascii') # much faster to index than unicode, and updatable in place
+        state = bytearray(state, 'ascii') # much faster to index than unicode, and updateable in place
         w = settings.COLUMNS
         h = settings.ROWS
         
@@ -15,40 +15,42 @@ class Rules:
         col = 0
         row = 0
         for cell in state:
-            if cell == 48:
-                if col > 0 and row > 0:
-                    neighbours0[h*(row-1)+(col-1)] += 1
-                if row > 0:
-                    neighbours0[h*(row-1)+(col)] += 1
-                if col < w-1 and row > 0:
-                    neighbours0[h*(row-1)+(col+1)] += 1
+            if cell == 48: # '0'
                 if col > 0:
                     neighbours0[h*(row)+(col-1)] += 1
+                    if row > 0:
+                        neighbours0[h*(row-1)+(col-1)] += 1
+                    if row < h-1:
+                        neighbours0[h*(row+1)+(col-1)] += 1
                 if col < w-1:
                     neighbours0[h*(row)+(col+1)] += 1
-                if col > 0 and row < h-1:
-                    neighbours0[h*(row+1)+(col-1)] += 1
+                    if row > 0:
+                        neighbours0[h*(row-1)+(col+1)] += 1
+                    if row < h-1:
+                        neighbours0[h*(row+1)+(col+1)] += 1
+                if row > 0:
+                    neighbours0[h*(row-1)+(col)] += 1
                 if row < h-1:
                     neighbours0[h*(row+1)+(col)] += 1
-                if col < w-1 and row < h-1:
-                    neighbours0[h*(row+1)+(col+1)] += 1
-            elif cell == 49:
-                if col > 0 and row > 0:
-                    neighbours1[h*(row-1)+(col-1)] += 1
-                if row > 0:
-                    neighbours1[h*(row-1)+(col)] += 1
-                if col < w-1 and row > 0:
-                    neighbours1[h*(row-1)+(col+1)] += 1
+                
+            elif cell == 49: # '1'
                 if col > 0:
                     neighbours1[h*(row)+(col-1)] += 1
+                    if row > 0:
+                        neighbours1[h*(row-1)+(col-1)] += 1
+                    if row < h-1:
+                        neighbours1[h*(row+1)+(col-1)] += 1
                 if col < w-1:
                     neighbours1[h*(row)+(col+1)] += 1
-                if col > 0 and row < h-1:
-                    neighbours1[h*(row+1)+(col-1)] += 1
+                    if row > 0:
+                        neighbours1[h*(row-1)+(col+1)] += 1
+                    if row < h-1:
+                        neighbours1[h*(row+1)+(col+1)] += 1
+                if row > 0:
+                    neighbours1[h*(row-1)+(col)] += 1
                 if row < h-1:
                     neighbours1[h*(row+1)+(col)] += 1
-                if col < w-1 and row < h-1:
-                    neighbours1[h*(row+1)+(col+1)] += 1
+
             col += 1
             if col == w:
                 row += 1
