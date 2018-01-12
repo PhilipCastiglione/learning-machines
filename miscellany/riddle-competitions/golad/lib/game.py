@@ -1,14 +1,16 @@
-from sys import stdin, stderr
+from sys import stdin, stderr, stdout
+from operator import attrgetter
 import traceback
+import time
 
 import settings
-from bot import Bot
+from node import Node
 
 
 class Game:
     def __init__(self):
         self.round = 0
-        self.bot = Bot()
+        self.current_node = None
 
     def _handle_update(self, line):
         _, target, key, value = line.split()
@@ -17,7 +19,8 @@ class Game:
             if key == 'round':
                 self.round = int(value)
             elif key == 'field':
-                self.bot.tree.set_current_node(value.replace(',', ''))
+                state = value.replace(',','')
+                self.current_node = Node(state, True, None, None)
             else:
                 raise Exception('Unrecognised game update', line)
         elif target in settings.PLAYER_NAMES:
@@ -38,17 +41,13 @@ class Game:
             try:
                 line = stdin.readline().lower().strip()
 
-                # if we are waiting and don't have a line, the other player is
-                # taking their turn, so keep building our search tree
                 if len(line) <= 0:
-                    game.bot.build_tree_for(settings.TICK_DURATION)
+                    time.sleep(0.01)
                 elif line.startswith('update'):
                     game._handle_update(line)
                 elif line.startswith('action'):
-                    # TODO: make time based decisions about building tree vs acting
-                    t = settings.TIME_PER_MOVE - settings.TICK_DURATION
-                    game.bot.build_tree_for(t)
-                    game.bot.move()
+                    game.current_node.build_children()
+                    game.move()
                 elif line.startswith('quit'):
                     break
                 else:
@@ -60,3 +59,9 @@ class Game:
                 # log the error but keep running if possible
                 traceback.print_exc(file=stderr)
                 stderr.flush()
+
+    def move(self):
+        # pick the best move from the available children
+        node = max(self.current_node.children, key=attrgetter('minimax_value'))
+        stdout.write('{}\n'.format(node.move))
+        stdout.flush()

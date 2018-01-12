@@ -2,8 +2,7 @@ from sys import stdin
 import time
 
 # global constants
-TICK_DURATION = 100  # we allow 100ms to pass between checks for input
-TOP_KILL_COUNT = 6  # we only look at births for the best kill moves
+TOP_KILL_COUNT = 4  # we only look at births for the best kill moves
 # globals to be set when settings are parsed
 PLAYER_NAMES = None
 TIME_PER_MOVE = None
