@@ -44,5 +44,5 @@ if __name__ == '__main__':
     bench('_update_minimax', game.current_node._update_minimax)
 
     # output move
-    # bench('move', game.move)
+    bench('move', game.move)
 
