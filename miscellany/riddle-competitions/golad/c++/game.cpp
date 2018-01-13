@@ -131,15 +131,15 @@ void makeMove()
 {
   int numMoves = 1 + (myLiveCells + theirLiveCells) + (6 * (288 - myLiveCells - theirLiveCells));
   node nodes[numMoves];
-  calculatePass(nodes);
-  calculateKill(nodes);
+  addPassNodes(nodes);
+  addKillNodes(nodes);
   int bestKillMoveIdxs[4];
-  findBestKillMoves(nodes, bestKillMoveIdxs);
-  calculateBirth(nodes, bestKillMoveIdxs);
+  findBestKillNodes(nodes, bestKillMoveIdxs);
+  addBirthNodes(nodes, bestKillMoveIdxs);
   // TODO: find best move, make move, api
 }
 
-void calculatePass(node nodes[])
+void addPassNodes(node nodes[])
 {
   node n;
   copyState(n.state);
@@ -148,15 +148,28 @@ void calculatePass(node nodes[])
   nodes[0] = n;
 }
 
-void calculateKill(node nodes[])
+void addKillNodes(node nodes[])
+{
+  int i = 0;
+  for (int c = 0; c < 19; c++) {
+    for (int r = 0; r < 17; r++) {
+      if (state[r][c] != '.') {
+        node n;
+        copyState(n.state);
+        n.state[r][c] = '.';
+        calculateNextState(n);
+        calculateHeuristic(n);
+        nodes[++i] = n;
+      }
+    }
+  }
+}
+
+void findBestKillNodes(const node nodes[], int bestKillMoves[])
 {
 }
 
-void findBestKillMoves(const node nodes[], int bestKillMoves[])
-{
-}
-
-void calculateBirth(node nodes[], const int bestKillMoves[])
+void addBirthNodes(node nodes[], const int bestKillMoves[])
 {
 }
 
