@@ -5,7 +5,7 @@ using namespace std;
 stringstream token;
 char botId;
 char state[16][18];
-int round, timebank, myCellCount, hisCellCount;
+int round, timebank, myLiveCells, theirLiveCells;
 
 void game()
 {
@@ -19,9 +19,9 @@ void game()
 
     if (command == "action")
       processAction();
-    else if (command == "update")
+    if (command == "update")
       processUpdate();
-    else if (command == "settings")
+    if (command == "settings")
       processSettings();
   }
 }
@@ -49,17 +49,17 @@ void processUpdate()
   if (target == "game") {
     if (field == "round")
       round = stoi(value);
-    else if (field == "field")
+    if (field == "field")
       parseState(value);
-  } else if (target == "player0") {
-  } else if (target == "player1") {
-  } else if (target == "player0" or target == "player1") {
+  }
+  if (target == "player0" or target == "player1") {
     if (field == "living_cells") {
       if (target[6] == botId)
-        myCellCount = stoi(value);
+        myLiveCells = stoi(value);
       else
-        hisCellCount = stoi(value);
-    } else if (field != "node")
+        theirLiveCells = stoi(value);
+    }
+    if (field != "node")
       cerr << "update playerX field: " << field << " not expected\n";
   } else
     cerr << "update target: " << target << " not expected\n";
@@ -74,27 +74,34 @@ void processSettings()
   if (field == "player_names") {
     if (value != "player0,player1")
       cerr << "settings player_names value: " << value << " not expected\n";
-  } else if (field == "your_bot") {
+  }
+  if (field == "your_bot") {
     if (value != "player0" and value != "player1")
       cerr << "settings your_bot value: " << value << " not expected\n";
-  } else if (field == "timebank") {
+  }
+  if (field == "timebank") {
     if (value == "10000")
       timebank = stoi(value);
     else
       cerr << "settings timebank value: " << value << " not expected\n";
-  } else if (field == "time_per_move") {
+  }
+  if (field == "time_per_move") {
     if (value != "100")
       cerr << "settings time_per_move value: " << value << " not expected\n";
-  } else if (field == "field_width") {
+  }
+  if (field == "field_width") {
     if (value != "18")
       cerr << "settings field_width value: " << value << " not expected\n";
-  } else if (field == "field_height") {
+  }
+  if (field == "field_height") {
     if (value != "16")
       cerr << "settings field_height value: " << value << " not expected\n";
-  } else if (field == "max_rounds") {
+  }
+  if (field == "max_rounds") {
     if (value != "100")
       cerr << "settings max_rounds value: " << value << " not expected\n";
-  } else if (field == "your_botid") {
+  }
+  if (field == "your_botid") {
     if (value == "0" or value == "1")
       botId = value[0];
     else
@@ -122,7 +129,7 @@ void parseState(const string value)
 
 void makeMove()
 {
-  int numMoves = 1 + (myCellCount + hisCellCount) + (6 * (288 - myCellCount - hisCellCount));
+  int numMoves = 1 + (myLiveCells + theirLiveCells) + (6 * (288 - myLiveCells - theirLiveCells));
   node nodes[numMoves];
   calculatePass(nodes);
   calculateKill(nodes);
@@ -154,8 +161,8 @@ void calculateBirth(node nodes[], const int bestKillMoves[])
 
 void copyState(char target[][18])
 {
-  for (int r = 0; r < 17; r++) {
-    for (int c = 0; c < 19; c++) {
+  for (int c = 0; c < 19; c++) {
+    for (int r = 0; r < 17; r++) {
       target[r][c] = state[r][c];
     }
   }
