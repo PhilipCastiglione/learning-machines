@@ -77,7 +77,7 @@ class Rules:
 
         if opponent_cell_count == 0:
             # if the opponent has no cells left, this is a win, set to max
-            value = 16 * settings.COLUMNS
+            value = settings.ROWS * settings.COLUMNS
         elif cell_count == 0:
             # if you have no cells left, this is a loss, set to min
             value = 0
