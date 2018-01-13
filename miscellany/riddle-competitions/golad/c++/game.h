@@ -10,6 +10,7 @@ struct node
 {
   char state[16][18];
   int heuristicValue;
+  char type;
 };
 
 void game();

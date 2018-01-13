@@ -142,6 +142,7 @@ void makeMove()
 void addPassNodes(node nodes[])
 {
   node n;
+  n.type = 'p';
   copyState(n.state);
   calculateNextState(n);
   calculateHeuristic(n);
@@ -155,6 +156,7 @@ void addKillNodes(node nodes[])
     for (int r = 0; r < 17; r++) {
       if (state[r][c] != '.') {
         node n;
+        n.type = 'k';
         copyState(n.state);
         n.state[r][c] = '.';
         calculateNextState(n);
@@ -167,6 +169,47 @@ void addKillNodes(node nodes[])
 
 void findBestKillNodes(const node nodes[], int bestKillMoves[])
 {
+  int bestNode1[2];
+  bestNode1[0] = 0;
+  bestNode1[1] = 0;
+  int bestNode2[2];
+  bestNode2[0] = 0;
+  bestNode2[1] = 0;
+  int bestNode3[2];
+  bestNode3[0] = 0;
+  bestNode3[1] = 0;
+  int bestNode4[2];
+  bestNode4[0] = 0;
+  bestNode4[1] = 0;
+
+  for (int i = 0; i < 288; i++) {
+    node n  = nodes[i];
+    if (n.type == 'k' and n.heuristicValue > bestNode4[0]) {
+      if (n.heuristicValue > bestNode3[0]) {
+        bestNode4[0] = bestNode3[0];
+        bestNode4[1] = bestNode3[1];
+        if (n.heuristicValue > bestNode2[0]) {
+        bestNode3[0] = bestNode2[0];
+        bestNode3[1] = bestNode2[1];
+          if (n.heuristicValue > bestNode1[0]) {
+            bestNode2[0] = bestNode1[0];
+            bestNode2[1] = bestNode1[1];
+            bestNode1[0] = n.heuristicValue;
+            bestNode1[1] = i;
+          } else {
+            bestNode2[0] = n.heuristicValue;
+            bestNode2[1] = i;
+          }
+        } else {
+          bestNode3[0] = n.heuristicValue;
+          bestNode3[1] = i;
+        }
+      } else {
+        bestNode4[0] = n.heuristicValue;
+        bestNode4[1] = i;
+      }
+    }
+  }
 }
 
 void addBirthNodes(node nodes[], const int bestKillMoves[])
