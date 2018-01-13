@@ -42,15 +42,27 @@ void processAction()
 
 void processUpdate()
 {
-  string target, value;
+  string target, field, value;
   token >> target;
+  token >> field;
   token >> value;
 
-  if (target == "round")
-    round = stoi(value);
-  else if (target == "field")
-    parseState(value);
-  else
+  if (target == "game") {
+    if (field == "round")
+      round = stoi(value);
+    else if (field == "field")
+      parseState(value);
+  } else if (target == "player0") {
+  } else if (target == "player1") {
+  } else if (target == "player0" or target == "player1") {
+    if (field == "living_cells") {
+      if (target[6] == botId)
+        myCellCount = stoi(value);
+      else
+        hisCellCount = stoi(value);
+    } else if (field != "node")
+      cerr << "update playerX field: " << field << " not expected\n";
+  } else
     cerr << "update target: " << target << " not expected\n";
 }
 
