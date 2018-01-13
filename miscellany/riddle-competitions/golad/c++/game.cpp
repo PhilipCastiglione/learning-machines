@@ -34,8 +34,7 @@ void processAction()
 
   if (type == "move") {
     timebank = stoi(time);
-
-    cout << "pass" << "\n"; // TODO: this is a suboptimal strategy
+    makeMove();
   } else
     cerr << "action type: " << type << " not expected\n";
 }
@@ -119,4 +118,49 @@ void parseState(const string value)
       }
     }
   }
+}
+
+void makeMove()
+{
+  int numMoves = 1 + (myCellCount + hisCellCount) + (6 * (288 - myCellCount - hisCellCount));
+  node nodes[numMoves];
+  calculatePass(nodes);
+  calculateKill(nodes);
+  int bestKillMoveIdxs[4];
+  findBestKillMoves(nodes, bestKillMoveIdxs);
+  calculateBirth(nodes, bestKillMoveIdxs);
+  // TODO: find best move, make move, api
+}
+
+void calculatePass(node nodes[])
+{
+  node n;
+  copyState(n.state);
+  calculateNextState(n);
+  nodes[0] = n;
+}
+
+void calculateKill(node nodes[])
+{
+}
+
+void findBestKillMoves(const node nodes[], int bestKillMoves[])
+{
+}
+
+void calculateBirth(node nodes[], const int bestKillMoves[])
+{
+}
+
+void copyState(char target[][18])
+{
+  for (int r = 0; r < 17; r++) {
+    for (int c = 0; c < 19; c++) {
+      target[r][c] = state[r][c];
+    }
+  }
+}
+
+void calculateNextState(node n)
+{
 }
