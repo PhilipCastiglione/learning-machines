@@ -9,6 +9,7 @@ using namespace std;
 struct node
 {
   char state[16][18];
+  int heuristicValue;
 };
 
 void game();
@@ -23,5 +24,6 @@ void findBestKillMoves(const node nodes[], int bestKillMoves[]);
 void calculateBirth(node nodes[], const int bestKillMoves[]);
 void copyState(char target[][18]);
 void calculateNextState(node n);
+void calculateHeuristic(node n);
 
 #endif
