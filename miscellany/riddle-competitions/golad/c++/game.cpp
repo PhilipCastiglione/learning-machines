@@ -104,11 +104,11 @@ void processSettings()
     cerr << "settings field: " << field << " not expected\n";
 }
 
-void parseState(string value)
+void parseState(const string value)
 {
   int row = 0;
   int col = 0;
-  for (char& c : value) {
+  for (const char& c : value) {
     if (c != '.') {
       state[row][col] = c;
       if (col == 17) {

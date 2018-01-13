@@ -7,10 +7,9 @@
 using namespace std;
 
 void game();
-void processLine(string line);
 void processAction();
 void processUpdate();
 void processSettings();
-void parseState(string value);
+void parseState(const string value);
 
 #endif
