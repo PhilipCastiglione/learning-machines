@@ -5,7 +5,7 @@ using namespace std;
 stringstream token;
 char botId;
 char state[16][18];
-int round, timebank;
+int round, timebank, myCellCount, hisCellCount;
 
 void game()
 {
