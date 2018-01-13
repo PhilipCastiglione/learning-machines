@@ -20,7 +20,7 @@ class Game:
                 self.round = int(value)
             elif key == 'field':
                 state = value.replace(',','')
-                self.current_node = Node(state, True, None, None)
+                self.current_node = Node(bytearray(state, 'ascii'), True, None, None)
             else:
                 raise Exception('Unrecognised game update', line)
         elif target in settings.PLAYER_NAMES:

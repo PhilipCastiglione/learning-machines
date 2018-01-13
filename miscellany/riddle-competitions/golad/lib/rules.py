@@ -1,66 +1,68 @@
 import settings
-import next_cell_states
 
 
 class Rules:
     @classmethod
     def calculate_next_state(cls, state):
-        next_state = ''
-        for row in range(settings.ROWS):
-            for col in range(settings.COLUMNS):
-                next_state += cls._get_next_cell_state(state, row, col)
-        return next_state
+        w = settings.COLUMNS
+        h = settings.ROWS
+        
+        # pass 1: count neighbours
+        neighbours0 = [0] * (w * h)
+        neighbours1 = [0] * (w * h)
+        col = 0
+        row = 0
+        for cell in state:
+            if cell == 48: # '0'
+                if col > 0:
+                    neighbours0[h*(row)+(col-1)] += 1
+                    if row > 0:
+                        neighbours0[h*(row-1)+(col-1)] += 1
+                    if row < h-1:
+                        neighbours0[h*(row+1)+(col-1)] += 1
+                if col < w-1:
+                    neighbours0[h*(row)+(col+1)] += 1
+                    if row > 0:
+                        neighbours0[h*(row-1)+(col+1)] += 1
+                    if row < h-1:
+                        neighbours0[h*(row+1)+(col+1)] += 1
+                if row > 0:
+                    neighbours0[h*(row-1)+(col)] += 1
+                if row < h-1:
+                    neighbours0[h*(row+1)+(col)] += 1
+                
+            elif cell == 49: # '1'
+                if col > 0:
+                    neighbours1[h*(row)+(col-1)] += 1
+                    if row > 0:
+                        neighbours1[h*(row-1)+(col-1)] += 1
+                    if row < h-1:
+                        neighbours1[h*(row+1)+(col-1)] += 1
+                if col < w-1:
+                    neighbours1[h*(row)+(col+1)] += 1
+                    if row > 0:
+                        neighbours1[h*(row-1)+(col+1)] += 1
+                    if row < h-1:
+                        neighbours1[h*(row+1)+(col+1)] += 1
+                if row > 0:
+                    neighbours1[h*(row-1)+(col)] += 1
+                if row < h-1:
+                    neighbours1[h*(row+1)+(col)] += 1
 
-    @staticmethod
-    def _get_next_cell_state(state, r, c):
-        if r > 0 and r < settings.ROWS and c > 0 and c < settings.COLUMNS:
-            # full cell
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.middle[cell_region]
-        elif r == 0 and c > 0 and c < settings.COLUMNS:
-            # top edge
-            cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.top[cell_region]
-        elif r == settings.ROWS and c > 0 and c < settings.COLUMNS:
-            # bottom edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 2]
-            return next_cell_states.bottom[cell_region]
-        elif r > 0 and r < settings.ROWS and c == 0:
-            # left edge
-            cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.left[cell_region]
-        elif r > 0 and r < settings.ROWS and c == settings.COLUMNS:
-            # right edge
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
-            return next_cell_states.right[cell_region]
-        elif r == 0 and c == 0:
-            # top left corner
-            cell_region = state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            cell_region += state[settings.ROWS * (r + 1) + c:settings.ROWS * (r + 1) + c + 2]
-            return next_cell_states.top_left[cell_region]
-        elif r == 0 and c == settings.COLUMNS:
-            # top right corner
-            cell_region = state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            cell_region += state[settings.ROWS * (r + 1) + c - 1:settings.ROWS * (r + 1) + c + 1]
-            return next_cell_states.top_right[cell_region]
-        elif r == settings.ROWS and c == 0:
-            # bottom left corner
-            cell_region = state[settings.ROWS * (r - 1) + c:settings.ROWS * (r - 1) + c + 2]
-            cell_region += state[settings.ROWS * r + c:settings.ROWS * r + c + 2]
-            return next_cell_states.bottom_left[cell_region]
-        elif r == settings.ROWS and c == settings.COLUMNS:
-            # bottom right corner
-            cell_region = state[settings.ROWS * (r - 1) + c - 1:settings.ROWS * (r - 1) + c + 1]
-            cell_region += state[settings.ROWS * r + c - 1:settings.ROWS * r + c + 1]
-            return next_cell_states.bottom_right[cell_region]
+            col += 1
+            if col == w:
+                row += 1
+                col = 0
+        
+        # pass 2: build new state from old + neighbours
+        idx = 0
+        for cell in state:
+            neighbours = neighbours0[idx] + neighbours1[idx]
+            if cell == '.' and neighbours == 3: # birth
+                state[idx] = 48 if neighbours0[idx] > neighbours1[idx] else 49
+            elif cell != '.' and (neighbours < 2 or neighbours > 3): # death
+                state[idx] = 46
+            idx += 1
 
     def calculate_heuristic(state, my_turn):
         if my_turn:

@@ -72,7 +72,7 @@ class Settings:
         g = globals()
         g['PLAYER_NAMES'] = settings['player_names']
         g['TIME_PER_MOVE'] = settings['time_per_move']
-        g['PLAYER_ID'] = settings['your_botid']
-        g['OPPONENT_ID'] = str(1 - int(settings['your_botid']))
+        g['PLAYER_ID'] = bytearray(settings['your_botid'], 'ascii')[0]
+        g['OPPONENT_ID'] = bytearray(str(1 - int(settings['your_botid'])), 'ascii')[0]
         g['ROWS'] = settings['field_height']
         g['COLUMNS'] = settings['field_width']
