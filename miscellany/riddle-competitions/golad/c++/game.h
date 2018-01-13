@@ -11,5 +11,6 @@ void processLine(string line);
 void processAction();
 void processUpdate();
 void processSettings();
+void parseState(string value);
 
 #endif
