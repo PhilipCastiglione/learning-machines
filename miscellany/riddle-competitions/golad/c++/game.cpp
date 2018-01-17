@@ -35,7 +35,6 @@ void processAction()
   if (type == "move") {
     timebank = stoi(time);
     makeMove();
-    cout << "pass\n"; // TODO: remove
   } else
     cerr << "action type: " << type << " not expected\n";
 }
@@ -131,7 +130,9 @@ void makeMove()
   addKillNodes(nodes);
   findBestKillNodes(nodes, bestKillNodes);
   addBirthNodes(nodes, bestKillNodes);
-  // TODO: find best move, make move, api
+
+  node bestNode = findBestNode(nodes, numMoves);
+  sendMove(bestNode);
 }
 
 void addPassNodes(node nodes[])
@@ -224,6 +225,38 @@ void addBirthNodes(node nodes[], const node bestKillNodes[])
       }
     }
   }
+}
+
+node findBestNode(const node nodes[], int nodeCount)
+{
+  int topHeuristic = 0;
+  int topHeuristicIdx = 0;
+  for (int i = 0; i < nodeCount; i++) {
+    if (nodes[topHeuristicIdx].heuristicValue > topHeuristic) {
+      topHeuristic = nodes[topHeuristicIdx].heuristicValue;
+      topHeuristicIdx = i;
+    }
+  }
+
+  return nodes[topHeuristicIdx];
+}
+
+void sendMove(const node &n)
+{
+  if (n.type == 'p') {
+    cout << "pass\n";
+  } else if (n.type == 'k') {
+    cout << "kill " << coords(n.target) << "\n";
+  } else if (n.type == 'b') {
+    cout << "birth " << coords(n.target) << " " << coords(n.sacrifice1) << " " << coords(n.sacrifice2) << "\n";
+  }
+}
+
+string coords(int cellIdx)
+{
+  stringstream ss;
+  ss << (cellIdx % 18 - 1) << "," << cellIdx / 18;
+  return ss.str();
 }
 
 void copyState(char target[][18])
