@@ -1,8 +1,13 @@
+#include "test.h"
 #include "game.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-  game();
+  if (argc == 1) {
+    game();
+  } else {
+    test();
+  }
 
   return 0;
 }
