@@ -3,6 +3,7 @@
 
 #include "game.h"
 
+void testCoords();
 void test();
 void testParseState();
 void testCalculateHeuristic(node &n);

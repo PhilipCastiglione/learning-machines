@@ -11,6 +11,9 @@ void test()
 {
   cout << "Beginning tests.\n";
 
+  testCoords();
+  cout << "fn coords passed all tests.\n";
+
   testParseState();
   cout << "fn parseState passed all tests.\n";
 
@@ -23,6 +26,12 @@ void test()
   cout << "fn calculateNextState passed all tests.\n";
 
   cout << "Finished tests with no failures. Yay.\n";
+}
+
+void testCoords()
+{
+  assert(coords(5) == "5,0");
+  assert(coords(34) == "16,1");
 }
 
 void testParseState()
