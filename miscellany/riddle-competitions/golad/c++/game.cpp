@@ -152,6 +152,7 @@ void addKillNodes(node nodes[])
     for (int r = 0; r < 16; r++) {
       if (state[r][c] != '.') {
         node n;
+        n.value = state[r][c];
         n.type = 'k';
         n.target = r * 18 + c;
         copyState(n.state);
@@ -166,15 +167,17 @@ void addKillNodes(node nodes[])
 
 void findBestKillNodes(const node nodes[], node bestKillNodes[])
 {
-  node bestNode1 = nodes[1];
-  node bestNode2 = nodes[1];
-  node bestNode3 = nodes[1];
-  node bestNode4 = nodes[1];
+  node dummyNode;
+  dummyNode.heuristicValue = -289;
 
-  if (false) {
-    int i = 1;
+  node bestNode1 = dummyNode;
+  node bestNode2 = dummyNode;
+  node bestNode3 = dummyNode;
+  node bestNode4 = dummyNode;
+
+  for (int i = 1; i < (1 + myLiveCells + theirLiveCells); i++) {
     node n = nodes[i];
-    if (n.heuristicValue > bestNode4.heuristicValue) {
+    if (n.value == botId and n.heuristicValue > bestNode4.heuristicValue) {
       if (n.heuristicValue > bestNode3.heuristicValue) {
         bestNode4 = bestNode3;
         if (n.heuristicValue > bestNode2.heuristicValue) {
@@ -232,7 +235,7 @@ node findBestNode(const node nodes[], int nodeCount)
   int topHeuristic = 0;
   int topHeuristicIdx = 0;
   for (int i = 0; i < nodeCount; i++) {
-    if (nodes[topHeuristicIdx].heuristicValue > topHeuristic) {
+    if (nodes[i].heuristicValue > topHeuristic) {
       topHeuristic = nodes[topHeuristicIdx].heuristicValue;
       topHeuristicIdx = i;
     }
@@ -255,7 +258,7 @@ void sendMove(const node &n)
 string coords(int cellIdx)
 {
   stringstream ss;
-  ss << (cellIdx % 18 - 1) << "," << cellIdx / 18;
+  ss << (cellIdx % 18) << "," << cellIdx / 18;
   return ss.str();
 }
 
@@ -343,7 +346,7 @@ void calculateHeuristic(node &n)
 
   if (botId == '0') {
     if (cellCount0 == 0) {
-      n.heuristicValue = 0;
+      n.heuristicValue = -288;
     } else if (cellCount1 == 0) {
       n.heuristicValue = 288;
     } else {
@@ -351,7 +354,7 @@ void calculateHeuristic(node &n)
     }
   } else if (botId == '1') {
     if (cellCount1 == 0) {
-      n.heuristicValue = 0;
+      n.heuristicValue = -288;
     } else if (cellCount0 == 0) {
       n.heuristicValue = 288;
     } else {

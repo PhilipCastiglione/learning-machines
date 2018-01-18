@@ -13,6 +13,7 @@ struct node
   int heuristicValue;
   char type;
   int target;
+  char value;
   int sacrifice1;
   int sacrifice2;
 };
