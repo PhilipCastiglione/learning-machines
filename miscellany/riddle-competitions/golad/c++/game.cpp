@@ -273,57 +273,59 @@ void copyState(char target[][18])
 
 void calculateNextState(node &n)
 {
-  int neighbours0[16][18];
-  int neighbours1[16][18];
+  for (int lookAhead = 0; lookAhead < 3; lookAhead++) {
+    int neighbours0[16][18];
+    int neighbours1[16][18];
 
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
-      neighbours0[r][c] = 0;
-      neighbours1[r][c] = 0;
-    }
-  }
-
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
-      if (n.state[r][c] == '0') {
-        if (c > 0) {
-          neighbours0[r][c - 1]++;
-          if (r > 0) neighbours0[r - 1][c - 1]++;
-          if (r < 15) neighbours0[r + 1][c - 1]++;
-        }
-        if (c < 17) {
-          neighbours0[r][c + 1]++;
-          if (r > 0) neighbours0[r - 1][c + 1]++;
-          if (r < 15) neighbours0[r + 1][c + 1]++;
-        }
-        if (r > 0) neighbours0[r - 1][c]++;
-        if (r < 15) neighbours0[r + 1][c]++;
-      }
-      if (n.state[r][c] == '1') {
-        if (c > 0) {
-          neighbours1[r][c - 1]++;
-          if (r > 0) neighbours1[r - 1][c - 1]++;
-          if (r < 15) neighbours1[r + 1][c - 1]++;
-        }
-        if (c < 17) {
-          neighbours1[r][c + 1]++;
-          if (r > 0) neighbours1[r - 1][c + 1]++;
-          if (r < 15) neighbours1[r + 1][c + 1]++;
-        }
-        if (r > 0) neighbours1[r - 1][c]++;
-        if (r < 15) neighbours1[r + 1][c]++;
+    for (int c = 0; c < 18; c++) {
+      for (int r = 0; r < 16; r++) {
+        neighbours0[r][c] = 0;
+        neighbours1[r][c] = 0;
       }
     }
-  }
 
-  int neighbours;
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
-      neighbours = neighbours0[r][c] + neighbours1[r][c];
-      if (n.state[r][c] == '.' and neighbours == 3) {
-        n.state[r][c] = (neighbours0[r][c] > neighbours1[r][c]) ?  '0' : '1';
-      } else if (n.state[r][c] != '.' and (neighbours < 2 or neighbours > 3)) {
-        n.state[r][c] = '.';
+    for (int c = 0; c < 18; c++) {
+      for (int r = 0; r < 16; r++) {
+        if (n.state[r][c] == '0') {
+          if (c > 0) {
+            neighbours0[r][c - 1]++;
+            if (r > 0) neighbours0[r - 1][c - 1]++;
+            if (r < 15) neighbours0[r + 1][c - 1]++;
+          }
+          if (c < 17) {
+            neighbours0[r][c + 1]++;
+            if (r > 0) neighbours0[r - 1][c + 1]++;
+            if (r < 15) neighbours0[r + 1][c + 1]++;
+          }
+          if (r > 0) neighbours0[r - 1][c]++;
+          if (r < 15) neighbours0[r + 1][c]++;
+        }
+        if (n.state[r][c] == '1') {
+          if (c > 0) {
+            neighbours1[r][c - 1]++;
+            if (r > 0) neighbours1[r - 1][c - 1]++;
+            if (r < 15) neighbours1[r + 1][c - 1]++;
+          }
+          if (c < 17) {
+            neighbours1[r][c + 1]++;
+            if (r > 0) neighbours1[r - 1][c + 1]++;
+            if (r < 15) neighbours1[r + 1][c + 1]++;
+          }
+          if (r > 0) neighbours1[r - 1][c]++;
+          if (r < 15) neighbours1[r + 1][c]++;
+        }
+      }
+    }
+
+    int neighbours;
+    for (int c = 0; c < 18; c++) {
+      for (int r = 0; r < 16; r++) {
+        neighbours = neighbours0[r][c] + neighbours1[r][c];
+        if (n.state[r][c] == '.' and neighbours == 3) {
+          n.state[r][c] = (neighbours0[r][c] > neighbours1[r][c]) ?  '0' : '1';
+        } else if (n.state[r][c] != '.' and (neighbours < 2 or neighbours > 3)) {
+          n.state[r][c] = '.';
+        }
       }
     }
   }

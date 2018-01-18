@@ -1,6 +1,6 @@
 // TODO: author, licence, README
 // TODO: handle less than 4 kill targets for sacrifice
-// TODO: use time, tree search, lookahead, something like that
+// TODO: use time, get smarter
 #include "test.h"
 #include "game.h"
 
