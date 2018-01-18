@@ -25,6 +25,9 @@ void test()
   testCalculateNextState(n);
   cout << "fn calculateNextState passed all tests.\n";
 
+  testFindBestNode();
+  cout << "fn findBestNode passed all tests.\n";
+
   cout << "Finished tests with no failures. Yay.\n";
 }
 
@@ -81,4 +84,22 @@ void testCalculateNextState(node &n)
       assert(n.state[r][c] == ns[r][c]);
     }
   }
+}
+
+void testFindBestNode()
+{
+  node n1, n2, n3, n4;
+  n1.heuristicValue = 2;
+  n2.heuristicValue = -7;
+  n3.heuristicValue = 4;
+  n4.heuristicValue = 1;
+
+  node nodes[4];
+  nodes[0] = n1;
+  nodes[1] = n2;
+  nodes[2] = n3;
+  nodes[3] = n4;
+
+  node bestNode = findBestNode(nodes, 4);
+  assert(bestNode.heuristicValue == n3.heuristicValue);
 }
