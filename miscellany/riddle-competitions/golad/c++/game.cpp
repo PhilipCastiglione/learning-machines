@@ -232,7 +232,7 @@ void addBirthNodes(node nodes[], const node bestKillNodes[])
 
 node findBestNode(const node nodes[], int nodeCount)
 {
-  int topHeuristic = 0;
+  int topHeuristic = -288;
   int topHeuristicIdx = 0;
   for (int i = 0; i < nodeCount; i++) {
     if (nodes[i].heuristicValue > topHeuristic) {
