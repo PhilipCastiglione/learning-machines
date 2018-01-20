@@ -1,4 +1,5 @@
 #include "game.h"
+#include <chrono> // TODO: remove
 
 using namespace std;
 
@@ -6,6 +7,9 @@ stringstream token;
 char botId;
 char state[16][18];
 int round, timebank, myLiveCells, theirLiveCells;
+
+// this just for logging time TODO: remove
+auto t = chrono::steady_clock::now();
 
 void game()
 {
@@ -33,8 +37,11 @@ void processAction()
   token >> time;
 
   if (type == "move") {
+    t = chrono::steady_clock::now(); // TODO: remove
     timebank = stoi(time);
     makeMove();
+    chrono::duration<double> diff = chrono::steady_clock::now() - t; // TODO: remove
+    cerr << diff.count() * 1000 << "ms used\n"; // TODO: remove
   } else
     cerr << "action type: " << type << " not expected\n";
 }
@@ -123,6 +130,8 @@ void parseState(const string &value)
 void makeMove()
 {
   int numMoves = 1 + (myLiveCells + theirLiveCells) + (6 * (288 - myLiveCells - theirLiveCells));
+  // TODO: parameterise this part
+  // TODO: handle less then n of my cells alive for birthing calcs
   node bestKillNodes[4];
   node nodes[numMoves];
 
@@ -131,6 +140,7 @@ void makeMove()
   findBestKillNodes(nodes, bestKillNodes);
   addBirthNodes(nodes, bestKillNodes);
 
+  // TODO: for the best n nodes, calculate opponent moves and recalculate heuristic, then pick the best of those
   node bestNode = findBestNode(nodes, numMoves);
   sendMove(bestNode);
 }
@@ -336,6 +346,7 @@ void calculateHeuristic(node &n)
   int cellCount0 = 0;
   int cellCount1 = 0;
 
+  // TODO: consider the number of opponent cells alive to increase aggression when they are low
   for (int c = 0; c < 18; c++) {
     for (int r = 0; r < 16; r++) {
       if (n.state[r][c] == '0') {
