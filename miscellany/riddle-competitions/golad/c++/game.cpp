@@ -206,7 +206,7 @@ void findBestKillNodes(const node nodes[], node bestKillNodes[])
 void addBirthNodes(node nodes[], const node bestKillNodes[])
 {
   int i = myLiveCells + theirLiveCells;
-  for (int x = 0; x < 3; x++) {
+  for (int x = 0; x < 4; x++) {
     for (int y = x + 1; y < 4; y++) {
       for (int c = 0; c < 18; c++) {
         for (int r = 0; r < 16; r++) {
