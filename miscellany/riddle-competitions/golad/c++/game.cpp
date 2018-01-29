@@ -183,15 +183,13 @@ void addKillNodes(node nodes[], const char state[][18])
   }
 }
 
-void findBestKillNodes(node nodes[], node bestKillNodes[])
+void findBestKillNodes(node nodes[], char id, node bestKillNodes[])
 {
-  sort(nodes, nodes + myLiveCells + theirLiveCells, nodeCompare);
-
   int killNodeCount = 0;
   for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
     node n = nodes[i];
 
-    if (n.value == botId) {
+    if (n.value == id) {
       bestKillNodes[killNodeCount] = n;
       killNodeCount++;
 
