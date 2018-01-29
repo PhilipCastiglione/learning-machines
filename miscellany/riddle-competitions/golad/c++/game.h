@@ -26,18 +26,20 @@ void processUpdate();
 void processSettings();
 void parseState(const string &value);
 void makeMove();
-void addKillNodes(node nodes[]);
-void findBestKillNodes(node nodes[], node bestKillNodes[]);
-void addPassNode(node nodes[]);
-void addBirthNodes(node nodes[], const node bestKillNodes[]);
+void addKillNodes(node nodes[], const char state[][18]);
+void findBestKillNodes(node nodes[], char id, node bestKillNodes[]);
+void addPassNode(node nodes[], char state[][18], int idx);
+void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx);
+void considerOpponentMoves(node nodes[]);
 node findBestNode(const node nodes[], int nodeCount);
 void sendMove(const node &n);
-void calculateNextState(node &n);
+void calculateNextState(node &n, int lookahead);
 void calculateHeuristic(node &n);
 int factorial(int x, int result = 1);
 string coords(int cellIdx);
-void copyState(char target[][18]);
+void copyState(const char source[][18], char target[][18]);
 bool nodeCompare(node lhs, node rhs);
+
 void setBotId(const char id);
 
 #endif
