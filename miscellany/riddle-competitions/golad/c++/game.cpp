@@ -366,11 +366,11 @@ string coords(int cellIdx)
   return ss.str();
 }
 
-void copyState(char target[][18])
+void copyState(const char source[][18], char target[][18])
 {
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
-      target[r][c] = state[r][c];
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 18; c++) {
+      target[r][c] = source[r][c];
     }
   }
 }
