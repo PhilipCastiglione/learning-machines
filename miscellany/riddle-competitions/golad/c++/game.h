@@ -14,10 +14,10 @@ struct node
   char state[16][18];
   int heuristicValue;
   char type;
-  int target;
-  char value;
-  int sacrifice1;
-  int sacrifice2;
+  int targetIdx;
+  char targetId;
+  int sac1Idx;
+  int sac2Idx;
 };
 
 void game();

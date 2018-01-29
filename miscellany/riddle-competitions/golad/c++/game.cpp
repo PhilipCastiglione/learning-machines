@@ -149,7 +149,19 @@ void makeMove()
   addKillNodes(nodes, gameState);
 
   node bestKillNodes[SACRIFICE_OPTIONS];
+
+  // TODO: remove
+  for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
+    cerr << "node " << i << ": " << nodes[i].heuristicValue << "\n";
+  }
+
   sort(nodes, nodes + myLiveCells + theirLiveCells, nodeCompare);
+
+  // TODO: remove
+  for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
+    cerr << "node " << i << ": " << nodes[i].heuristicValue << "\n";
+  }
+
   findBestKillNodes(nodes, botId, bestKillNodes);
 
   addPassNode(nodes, gameState, myLiveCells + theirLiveCells);
@@ -183,9 +195,9 @@ void addKillNodes(node nodes[], const char state[][18])
     for (int c = 0; c < 18; c++) {
       if (state[r][c] != '.') {
         node n;
-        n.value = state[r][c];
+        n.targetId = state[r][c];
         n.type = 'k';
-        n.target = r * 18 + c;
+        n.targetIdx = r * 18 + c;
         copyState(state, n.state);
         n.state[r][c] = '.';
         calculateNextState(n, LOOKAHEAD);
@@ -198,14 +210,10 @@ void addKillNodes(node nodes[], const char state[][18])
 
 void findBestKillNodes(const node nodes[], char id, node bestKillNodes[])
 {
-  //cerr << "finding best kill nodes\n"; // TODO: remove
   int killNodeCount = 0;
   for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
-    node n = nodes[i];
-
-    if (n.value == id) {
-      bestKillNodes[killNodeCount] = n;
-      killNodeCount++;
+    if (nodes[i].targetId == id) {
+      bestKillNodes[killNodeCount++] = nodes[i];
 
       if (killNodeCount == SACRIFICE_OPTIONS) {
         break;
@@ -216,7 +224,6 @@ void findBestKillNodes(const node nodes[], char id, node bestKillNodes[])
 
 void addPassNode(node nodes[], const char state[][18], int idx)
 {
-  //cerr << "adding pass node\n"; // TODO: remove
   node n;
   n.type = 'p';
   copyState(state, n.state);
@@ -227,7 +234,6 @@ void addPassNode(node nodes[], const char state[][18], int idx)
 
 void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx)
 {
-  //cerr << "adding birth nodes\n"; // TODO: remove
   for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
     for (int y = x + 1; y < SACRIFICE_OPTIONS; y++) {
       for (int r = 0; r < 16; r++) {
@@ -235,13 +241,13 @@ void addBirthNodes(node nodes[], const char state[][18], int id, const node best
           if (state[r][c] == '.') {
             node n;
             n.type = 'b';
-            n.target = r * 18 + c;
-            n.sacrifice1 = bestKillNodes[x].target;
-            n.sacrifice2 = bestKillNodes[y].target;
+            n.targetIdx = r * 18 + c;
+            n.sac1Idx = bestKillNodes[x].targetIdx;
+            n.sac2Idx = bestKillNodes[y].targetIdx;
             copyState(state, n.state);
             n.state[r][c] = id;
-            n.state[n.sacrifice1 / 18][n.sacrifice1 % 18] = '.';
-            n.state[n.sacrifice2 / 18][n.sacrifice2 % 18] = '.';
+            n.state[n.sac1Idx / 18][n.sac1Idx % 18] = '.';
+            n.state[n.sac2Idx / 18][n.sac2Idx % 18] = '.';
             calculateNextState(n, LOOKAHEAD);
             calculateHeuristic(n);
             nodes[idx++] = n;
@@ -312,9 +318,9 @@ void sendMove(const node &n)
   if (n.type == 'p') {
     cout << "pass\n";
   } else if (n.type == 'k') {
-    cout << "kill " << coords(n.target) << "\n";
+    cout << "kill " << coords(n.targetIdx) << "\n";
   } else if (n.type == 'b') {
-    cout << "birth " << coords(n.target) << " " << coords(n.sacrifice1) << " " << coords(n.sacrifice2) << "\n";
+    cout << "birth " << coords(n.targetIdx) << " " << coords(n.sac1Idx) << " " << coords(n.sac2Idx) << "\n";
   }
 }
 
