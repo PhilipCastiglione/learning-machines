@@ -9,7 +9,7 @@ using namespace std;
 // globals
 int sacrificeCombinations = factorial(SACRIFICE_OPTIONS) / (factorial(SACRIFICE_OPTIONS - 2) * factorial(2));
 stringstream token;
-char botId;
+char botId, opponentId;
 char gameState[16][18];
 int roundNum, timebank, myLiveCells, theirLiveCells;
 
@@ -107,8 +107,13 @@ void processSettings()
     if (value != "100")
       cerr << "settings max_rounds value: " << value << " not expected\n";
   } else if (field == "your_botid") {
-    if (value == "0" or value == "1")
-      botId = value[0];
+    if (value == "0") {
+      botId = '0';
+      opponentId = '1';
+    } else if (value == "1") {
+      botId = '1';
+      opponentId = '0';
+    }
     else
       cerr << "settings your_botid value: " << value << " not expected\n";
   } else
