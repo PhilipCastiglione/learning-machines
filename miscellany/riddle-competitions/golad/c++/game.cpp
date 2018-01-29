@@ -1,13 +1,13 @@
 #include "game.h"
 
-#define LOOKAHEAD 4
-#define SACRIFICE_OPTIONS 5
-#define OPPONENT_MOVES 5
+#define LOOKAHEAD 2
+#define SACRIFICE_OPTIONS 2
+#define OPPONENT_MOVES 2
 
 using namespace std;
 
 // globals
-int sacrificeCombinations = factorial(SACRIFICE_OPTIONS) / (factorial(SACRIFICE_OPTIONS - 2) * factorial(2));
+int sacrificeCombinations = (SACRIFICE_OPTIONS == 2) ? 1 : factorial(SACRIFICE_OPTIONS) / (factorial(SACRIFICE_OPTIONS - 2) * factorial(2));
 stringstream token;
 char botId, opponentId;
 char gameState[16][18];
