@@ -154,9 +154,19 @@ void makeMove()
 
   addBirthNodes(nodes, gameState, bestKillNodes, myLiveCells + theirLiveCells + 1);
 
-  // TODO: for the best n nodes, calculate opponent moves and recalculate heuristic, then pick the best of those
-  // sort then slice, then 2nd round heuristic, then sort then first
   sort(nodes, nodes + numMoves, nodeCompare);
+
+  cerr << "node values pre opponent\n";
+  for (int i = 0; i < numMoves; i++) {
+    cerr << "[" << i << "|" << nodes[i].heuristicValue << "] ";
+  }
+  cerr << "\n";
+  considerOpponentMoves(nodes);
+  cerr << "node values post opponent\n";
+  for (int i = 0; i < numMoves; i++) {
+    cerr << "[" << i << "|" << nodes[i].heuristicValue << "] ";
+  }
+  cerr << "\n";
 
   // node bestNode = findBestNode(nodes, numMoves);
   node bestNode = nodes[0];
@@ -234,6 +244,47 @@ void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], i
         }
       }
     }
+  }
+}
+
+void considerOpponentMoves(node nodes[])
+{
+  // TODO: for the best n nodes, calculate opponent moves and recalculate heuristic, then pick the best of those
+  // sort then slice, then 2nd round heuristic, then sort then first
+  for (int i = 0; i < OPPONENT_MOVES; i++) {
+    //cerr << "considering opponent move " << i << "\n"; // TODO: remove
+    node n = nodes[i];
+
+    int theirCellCount = 0;
+    int myCellCount = 0;
+
+    for (int r = 0; r < 16; r++) {
+      for (int c = 0; c < 18; c++) {
+        if (n.state[r][c] == botId) {
+          myCellCount++;
+        } else if (n.state[r][c] == opponentId) {
+          theirCellCount++;
+        }
+      }
+    }
+
+    int numMoves = 1 + (theirCellCount + myCellCount) + (sacrificeCombinations * (288 - theirCellCount - myCellCount));
+
+    // TODO: handle less then n cells alive for birthing calcs
+    node childNodes[numMoves];
+
+    addKillNodes(childNodes, n.state);
+
+    node bestKillNodes[SACRIFICE_OPTIONS];
+    sort(nodes, nodes + theirCellCount + myCellCount, nodeCompare);
+    findBestKillNodes(childNodes, opponentId, bestKillNodes);
+
+    addPassNode(nodes, n.state, theirCellCount + myCellCount);
+
+    addBirthNodes(childNodes, n.state, bestKillNodes, theirCellCount + myCellCount + 1);
+
+    sort(childNodes, childNodes + numMoves, nodeCompare);
+    n.heuristicValue = childNodes[numMoves - 1].heuristicValue;
   }
 }
 
