@@ -29,7 +29,7 @@ void makeMove();
 void addKillNodes(node nodes[], const char state[][18]);
 void findBestKillNodes(node nodes[], char id, node bestKillNodes[]);
 void addPassNode(node nodes[], char state[][18], int idx);
-void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx);
+void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx);
 void considerOpponentMoves(node nodes[]);
 node findBestNode(const node nodes[], int nodeCount);
 void sendMove(const node &n);

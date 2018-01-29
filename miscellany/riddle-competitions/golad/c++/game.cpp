@@ -154,7 +154,7 @@ void makeMove()
 
   addPassNode(nodes, gameState, myLiveCells + theirLiveCells);
 
-  addBirthNodes(nodes, gameState, bestKillNodes, myLiveCells + theirLiveCells + 1);
+  addBirthNodes(nodes, gameState, botId, bestKillNodes, myLiveCells + theirLiveCells + 1);
 
   sort(nodes, nodes + numMoves, nodeCompare);
 
@@ -225,7 +225,7 @@ void addPassNode(node nodes[], char state[][18], int idx)
   nodes[idx] = n;
 }
 
-void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx)
+void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx)
 {
   //cerr << "adding birth nodes\n"; // TODO: remove
   for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
@@ -239,7 +239,7 @@ void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], i
             n.sacrifice1 = bestKillNodes[x].target;
             n.sacrifice2 = bestKillNodes[y].target;
             copyState(state, n.state);
-            n.state[r][c] = botId;
+            n.state[r][c] = id;
             n.state[n.sacrifice1 / 18][n.sacrifice1 % 18] = '.';
             n.state[n.sacrifice2 / 18][n.sacrifice2 % 18] = '.';
             calculateNextState(n, LOOKAHEAD);
@@ -286,7 +286,7 @@ void considerOpponentMoves(node nodes[])
 
     addPassNode(nodes, n.state, theirCellCount + myCellCount);
 
-    addBirthNodes(childNodes, n.state, bestKillNodes, theirCellCount + myCellCount + 1);
+    addBirthNodes(childNodes, n.state, opponentId, bestKillNodes, theirCellCount + myCellCount + 1);
 
     sort(childNodes, childNodes + numMoves, nodeCompare);
     n.heuristicValue = childNodes[numMoves - 1].heuristicValue;
