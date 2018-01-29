@@ -259,9 +259,9 @@ void sendMove(const node &n)
   }
 }
 
-void calculateNextState(node &n)
+void calculateNextState(node &n, int lookahead)
 {
-  for (int l = 0; l < LOOKAHEAD; l++) {
+  for (int l = 0; l < lookahead; l++) {
     int neighbours0[16][18];
     int neighbours1[16][18];
 
