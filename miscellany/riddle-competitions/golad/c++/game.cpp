@@ -150,17 +150,7 @@ void makeMove()
 
   node bestKillNodes[SACRIFICE_OPTIONS];
 
-  // TODO: remove
-  for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
-    cerr << "node " << i << ": " << nodes[i].heuristicValue << "\n";
-  }
-
   sort(nodes, nodes + myLiveCells + theirLiveCells, nodeCompare);
-
-  // TODO: remove
-  for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
-    cerr << "node " << i << ": " << nodes[i].heuristicValue << "\n";
-  }
 
   findBestKillNodes(nodes, botId, bestKillNodes);
 
@@ -170,20 +160,17 @@ void makeMove()
 
   sort(nodes, nodes + numMoves, nodeCompare);
 
-  cerr << "node values pre opponent\n";
+  // TODO: remove
   for (int i = 0; i < numMoves; i++) {
-    cerr << "[" << i << "|" << nodes[i].heuristicValue << "] ";
+    cerr << "node " << i << nodes[i].type<< ": " << nodes[i].heuristicValue << "\n";
   }
-  cerr << "\n";
   considerOpponentMoves(nodes);
-  cerr << "node values post opponent\n";
+  // TODO: remove
   for (int i = 0; i < numMoves; i++) {
-    cerr << "[" << i << "|" << nodes[i].heuristicValue << "] ";
+    cerr << "node " << i << nodes[i].type<< ": " << nodes[i].heuristicValue << "\n";
   }
-  cerr << "\n";
 
-  // node bestNode = findBestNode(nodes, numMoves);
-  node bestNode = nodes[0];
+  node bestNode = findBestNode(nodes, OPPONENT_MOVES);
 
   sendMove(bestNode);
 }
@@ -299,11 +286,11 @@ void considerOpponentMoves(node nodes[])
   }
 }
 
-node findBestNode(const node nodes[], int nodeCount)
+node findBestNode(const node nodes[], int idxBound)
 {
   int topHeuristic = -288;
   int topHeuristicIdx = 0;
-  for (int i = 0; i < nodeCount; i++) {
+  for (int i = 0; i < idxBound; i++) {
     if (nodes[i].heuristicValue > topHeuristic) {
       topHeuristic = nodes[topHeuristicIdx].heuristicValue;
       topHeuristicIdx = i;

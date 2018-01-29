@@ -31,7 +31,7 @@ void findBestKillNodes(const node nodes[], char id, node bestKillNodes[]);
 void addPassNode(node nodes[], const char state[][18], int idx);
 void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx);
 void considerOpponentMoves(node nodes[]);
-node findBestNode(const node nodes[], int nodeCount);
+node findBestNode(const node nodes[], int idxBound);
 void sendMove(const node &n);
 void calculateNextState(node &n, int lookahead);
 void calculateHeuristic(node &n);
