@@ -196,7 +196,7 @@ void addKillNodes(node nodes[], const char state[][18])
   }
 }
 
-void findBestKillNodes(node nodes[], char id, node bestKillNodes[])
+void findBestKillNodes(const node nodes[], char id, node bestKillNodes[])
 {
   //cerr << "finding best kill nodes\n"; // TODO: remove
   int killNodeCount = 0;
@@ -214,7 +214,7 @@ void findBestKillNodes(node nodes[], char id, node bestKillNodes[])
   }
 }
 
-void addPassNode(node nodes[], char state[][18], int idx)
+void addPassNode(node nodes[], const char state[][18], int idx)
 {
   //cerr << "adding pass node\n"; // TODO: remove
   node n;
