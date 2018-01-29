@@ -18,6 +18,7 @@ auto t = chrono::steady_clock::now();
 
 void game()
 {
+  cerr << "starting game\n"; // TODO: remove
   string line, command;
 
   while (getline(cin, line))
@@ -61,6 +62,7 @@ void processUpdate()
   if (target == "game") {
     if (field == "round") {
       roundNum = stoi(value);
+      cerr << "received round " << roundNum << "\n"; // TODO: remove
     }
     if (field == "field") {
       parseState(value);
@@ -72,7 +74,7 @@ void processUpdate()
       else
         theirLiveCells = stoi(value);
     } else if (field != "move")
-      cerr << "update playerX field: " << field << " not expected\n";
+      cerr << "update " << target << " field: " << field << " not expected\n";
   } else
     cerr << "update target: " << target << " not expected\n";
 }
@@ -196,6 +198,7 @@ void addKillNodes(node nodes[], const char state[][18])
 
 void findBestKillNodes(node nodes[], char id, node bestKillNodes[])
 {
+  //cerr << "finding best kill nodes\n"; // TODO: remove
   int killNodeCount = 0;
   for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
     node n = nodes[i];
@@ -213,6 +216,7 @@ void findBestKillNodes(node nodes[], char id, node bestKillNodes[])
 
 void addPassNode(node nodes[], char state[][18], int idx)
 {
+  //cerr << "adding pass node\n"; // TODO: remove
   node n;
   n.type = 'p';
   copyState(state, n.state);
@@ -223,6 +227,7 @@ void addPassNode(node nodes[], char state[][18], int idx)
 
 void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx)
 {
+  //cerr << "adding birth nodes\n"; // TODO: remove
   for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
     for (int y = x + 1; y < SACRIFICE_OPTIONS; y++) {
       for (int c = 0; c < 18; c++) {
