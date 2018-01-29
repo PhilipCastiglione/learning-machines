@@ -10,7 +10,7 @@ using namespace std;
 int sacrificeCombinations = factorial(SACRIFICE_OPTIONS) / (factorial(SACRIFICE_OPTIONS - 2) * factorial(2));
 stringstream token;
 char botId;
-char state[16][18];
+char gameState[16][18];
 int roundNum, timebank, myLiveCells, theirLiveCells;
 
 // this just for logging time TODO: remove
@@ -121,7 +121,7 @@ void parseState(const string &value)
   int col = 0;
   for (const char& c : value) {
     if (c != ',') {
-      state[row][col] = c;
+      gameState[row][col] = c;
       if (col == 17) {
         col = 0;
         row++;
@@ -158,7 +158,7 @@ void makeMove()
   sendMove(bestNode);
 }
 
-void addKillNodes(node nodes[])
+void addKillNodes(node nodes[], const char state[][18])
 {
   int i = 0;
   for (int c = 0; c < 18; c++) {
