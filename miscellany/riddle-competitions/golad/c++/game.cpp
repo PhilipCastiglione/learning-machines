@@ -197,14 +197,14 @@ void findBestKillNodes(node nodes[], node bestKillNodes[])
   }
 }
 
-void addPassNode(node nodes[])
+void addPassNode(node nodes[], char state[][18], int idx)
 {
   node n;
   n.type = 'p';
   copyState(n.state);
   calculateNextState(n);
   calculateHeuristic(n);
-  nodes[myLiveCells + theirLiveCells] = n;
+  nodes[idx] = n;
 }
 
 void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx)
