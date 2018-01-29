@@ -207,9 +207,8 @@ void addPassNode(node nodes[])
   nodes[myLiveCells + theirLiveCells] = n;
 }
 
-void addBirthNodes(node nodes[], const node bestKillNodes[])
+void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], int idx)
 {
-  int i = myLiveCells + theirLiveCells + 1;
   for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
     for (int y = x + 1; y < SACRIFICE_OPTIONS; y++) {
       for (int c = 0; c < 18; c++) {
@@ -226,7 +225,7 @@ void addBirthNodes(node nodes[], const node bestKillNodes[])
             n.state[n.sacrifice2 / 18][n.sacrifice2 % 18] = '.';
             calculateNextState(n);
             calculateHeuristic(n);
-            nodes[i++] = n;
+            nodes[idx++] = n;
           }
         }
       }
