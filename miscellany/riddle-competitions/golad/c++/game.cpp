@@ -179,8 +179,8 @@ void makeMove()
 void addKillNodes(node nodes[], const char state[][18])
 {
   int i = 0;
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 18; c++) {
       if (state[r][c] != '.') {
         node n;
         n.value = state[r][c];
@@ -230,8 +230,8 @@ void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], i
   //cerr << "adding birth nodes\n"; // TODO: remove
   for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
     for (int y = x + 1; y < SACRIFICE_OPTIONS; y++) {
-      for (int c = 0; c < 18; c++) {
-        for (int r = 0; r < 16; r++) {
+      for (int r = 0; r < 16; r++) {
+        for (int c = 0; c < 18; c++) {
           if (state[r][c] == '.') {
             node n;
             n.type = 'b';
@@ -324,15 +324,15 @@ void calculateNextState(node &n, int lookahead)
     int neighbours0[16][18];
     int neighbours1[16][18];
 
-    for (int c = 0; c < 18; c++) {
-      for (int r = 0; r < 16; r++) {
+    for (int r = 0; r < 16; r++) {
+      for (int c = 0; c < 18; c++) {
         neighbours0[r][c] = 0;
         neighbours1[r][c] = 0;
       }
     }
 
-    for (int c = 0; c < 18; c++) {
-      for (int r = 0; r < 16; r++) {
+    for (int r = 0; r < 16; r++) {
+      for (int c = 0; c < 18; c++) {
         if (n.state[r][c] == '0') {
           if (c > 0) {
             neighbours0[r][c - 1]++;
@@ -365,8 +365,8 @@ void calculateNextState(node &n, int lookahead)
     }
 
     int neighbours;
-    for (int c = 0; c < 18; c++) {
-      for (int r = 0; r < 16; r++) {
+    for (int r = 0; r < 16; r++) {
+      for (int c = 0; c < 18; c++) {
         neighbours = neighbours0[r][c] + neighbours1[r][c];
         if (n.state[r][c] == '.' and neighbours == 3) {
           n.state[r][c] = (neighbours0[r][c] > neighbours1[r][c]) ?  '0' : '1';
@@ -384,8 +384,8 @@ void calculateHeuristic(node &n)
   int cellCount1 = 0;
 
   // TODO: consider the number of opponent cells alive to increase aggression when they are low
-  for (int c = 0; c < 18; c++) {
-    for (int r = 0; r < 16; r++) {
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 18; c++) {
       if (n.state[r][c] == '0') {
         cellCount0++;
       } else if (n.state[r][c] == '1') {
