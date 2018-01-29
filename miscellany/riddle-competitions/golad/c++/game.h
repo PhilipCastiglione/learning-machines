@@ -40,6 +40,9 @@ string coords(int cellIdx);
 void copyState(const char source[][18], char target[][18]);
 bool nodeCompare(node lhs, node rhs);
 
+// debug/test functions
+void zeroGameState();
+void pasteState(char target[][18]);
 void setBotId(const char id);
 
 #endif

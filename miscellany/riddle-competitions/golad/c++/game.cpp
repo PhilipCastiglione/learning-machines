@@ -440,7 +440,25 @@ bool nodeCompare(node lhs, node rhs)
   return lhs.heuristicValue > rhs.heuristicValue;
 }
 
-// debug functions
+// debug/test functions
+void zeroGameState()
+{
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 18; c++) {
+      gameState[r][c] = '.';
+    }
+  }
+}
+
+void pasteState(char target[][18])
+{
+  for (int r = 0; r < 16; r++) {
+    for (int c = 0; c < 18; c++) {
+      target[r][c] = gameState[r][c];
+    }
+  }
+}
+
 void setBotId(const char id)
 {
   botId = id;
