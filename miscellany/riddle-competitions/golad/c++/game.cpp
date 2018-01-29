@@ -144,14 +144,15 @@ void makeMove()
   // TODO: handle less then n of my cells alive for birthing calcs
   node nodes[numMoves];
 
-  addKillNodes(nodes);
+  addKillNodes(nodes, gameState);
 
   node bestKillNodes[SACRIFICE_OPTIONS];
-  findBestKillNodes(nodes, bestKillNodes);
+  sort(nodes, nodes + myLiveCells + theirLiveCells, nodeCompare);
+  findBestKillNodes(nodes, botId, bestKillNodes);
 
-  addPassNode(nodes);
+  addPassNode(nodes, gameState, myLiveCells + theirLiveCells);
 
-  addBirthNodes(nodes, bestKillNodes);
+  addBirthNodes(nodes, gameState, bestKillNodes, myLiveCells + theirLiveCells + 1);
 
   // TODO: for the best n nodes, calculate opponent moves and recalculate heuristic, then pick the best of those
   // sort then slice, then 2nd round heuristic, then sort then first
@@ -173,9 +174,9 @@ void addKillNodes(node nodes[], const char state[][18])
         n.value = state[r][c];
         n.type = 'k';
         n.target = r * 18 + c;
-        copyState(n.state);
+        copyState(state, n.state);
         n.state[r][c] = '.';
-        calculateNextState(n);
+        calculateNextState(n, LOOKAHEAD);
         calculateHeuristic(n);
         nodes[i++] = n;
       }
@@ -204,8 +205,8 @@ void addPassNode(node nodes[], char state[][18], int idx)
 {
   node n;
   n.type = 'p';
-  copyState(n.state);
-  calculateNextState(n);
+  copyState(state, n.state);
+  calculateNextState(n, LOOKAHEAD);
   calculateHeuristic(n);
   nodes[idx] = n;
 }
@@ -222,11 +223,11 @@ void addBirthNodes(node nodes[], char state[][18], const node bestKillNodes[], i
             n.target = r * 18 + c;
             n.sacrifice1 = bestKillNodes[x].target;
             n.sacrifice2 = bestKillNodes[y].target;
-            copyState(n.state);
+            copyState(state, n.state);
             n.state[r][c] = botId;
             n.state[n.sacrifice1 / 18][n.sacrifice1 % 18] = '.';
             n.state[n.sacrifice2 / 18][n.sacrifice2 % 18] = '.';
-            calculateNextState(n);
+            calculateNextState(n, LOOKAHEAD);
             calculateHeuristic(n);
             nodes[idx++] = n;
           }
