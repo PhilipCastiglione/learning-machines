@@ -4,10 +4,11 @@
 #include "game.h"
 
 void test();
+void initializeState();
 void testCoords();
 void testParseState();
-void testCalculateHeuristic(node &n);
-void testCalculateNextState(node &n);
+void testCalculateHeuristic();
+void testCalculateNextState();
 void testFindBestNode();
 
 #endif
