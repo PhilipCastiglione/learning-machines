@@ -18,7 +18,6 @@ auto t = chrono::steady_clock::now();
 
 void game()
 {
-  cerr << "starting game\n"; // TODO: remove
   string line, command;
 
   while (getline(cin, line))
@@ -141,25 +140,12 @@ void parseState(const string &value)
 
 void makeMove()
 {
-  int numMoves = 1 + (myLiveCells + theirLiveCells) + (sacrificeCombinations * (288 - myLiveCells - theirLiveCells));
+  int cellCount = myLiveCells + theirLiveCells;
+  int numMoves = 1 + (cellCount) + (sacrificeCombinations * (288 - cellCount));
 
-  // TODO: handle less then n of my cells alive for birthing calcs
   node nodes[numMoves];
 
-  addKillNodes(nodes, gameState);
-
-  node bestKillNodes[SACRIFICE_OPTIONS];
-
-  sort(nodes, nodes + myLiveCells + theirLiveCells, nodeCompare);
-
-  findBestKillNodes(nodes, botId, bestKillNodes);
-
-  addPassNode(nodes, gameState, myLiveCells + theirLiveCells);
-
-  addBirthNodes(nodes, gameState, botId, bestKillNodes, myLiveCells + theirLiveCells + 1);
-
-  sort(nodes, nodes + numMoves, nodeCompare);
-
+  buildChildren(nodes, gameState, botId, cellCount, numMoves);
   // TODO: remove
   for (int i = 0; i < numMoves; i++) {
     cerr << "node " << i << nodes[i].type<< ": " << nodes[i].heuristicValue << "\n";
@@ -173,6 +159,24 @@ void makeMove()
   node bestNode = findBestNode(nodes, OPPONENT_MOVES);
 
   sendMove(bestNode);
+}
+
+void buildChildren(node nodes[], const char state[][18], char id, int cellCount, int numMoves)
+{
+  // TODO: handle less then n of my cells alive for birthing calcs
+  addKillNodes(nodes, state);
+
+  node bestKillNodes[SACRIFICE_OPTIONS];
+
+  sort(nodes, nodes + cellCount, nodeCompare);
+
+  findBestKillNodes(nodes, id, bestKillNodes, cellCount);
+
+  addPassNode(nodes, state, cellCount);
+
+  addBirthNodes(nodes, state, id, bestKillNodes, cellCount + 1);
+
+  sort(nodes, nodes + numMoves, nodeCompare);
 }
 
 void addKillNodes(node nodes[], const char state[][18])
@@ -195,10 +199,10 @@ void addKillNodes(node nodes[], const char state[][18])
   }
 }
 
-void findBestKillNodes(const node nodes[], char id, node bestKillNodes[])
+void findBestKillNodes(const node nodes[], char id, node bestKillNodes[], int idx)
 {
   int killNodeCount = 0;
-  for (int i = 0; i < myLiveCells + theirLiveCells; i++) {
+  for (int i = 0; i < idx; i++) {
     if (nodes[i].targetId == id) {
       bestKillNodes[killNodeCount++] = nodes[i];
 
@@ -247,41 +251,24 @@ void addBirthNodes(node nodes[], const char state[][18], int id, const node best
 
 void considerOpponentMoves(node nodes[])
 {
-  // TODO: for the best n nodes, calculate opponent moves and recalculate heuristic, then pick the best of those
-  // sort then slice, then 2nd round heuristic, then sort then first
   for (int i = 0; i < OPPONENT_MOVES; i++) {
-    //cerr << "considering opponent move " << i << "\n"; // TODO: remove
     node n = nodes[i];
 
-    int theirCellCount = 0;
-    int myCellCount = 0;
+    int liveCellCount = 0;
 
     for (int r = 0; r < 16; r++) {
       for (int c = 0; c < 18; c++) {
-        if (n.state[r][c] == botId) {
-          myCellCount++;
-        } else if (n.state[r][c] == opponentId) {
-          theirCellCount++;
-        }
+        if (n.state[r][c] != '.')
+          liveCellCount++;
       }
     }
 
-    int numMoves = 1 + (theirCellCount + myCellCount) + (sacrificeCombinations * (288 - theirCellCount - myCellCount));
+    int numMoves = 1 + (liveCellCount) + (sacrificeCombinations * (288 - liveCellCount));
 
-    // TODO: handle less then n cells alive for birthing calcs
     node childNodes[numMoves];
 
-    addKillNodes(childNodes, n.state);
+    buildChildren(childNodes, n.state, opponentId, liveCellCount, numMoves);
 
-    node bestKillNodes[SACRIFICE_OPTIONS];
-    sort(nodes, nodes + theirCellCount + myCellCount, nodeCompare);
-    findBestKillNodes(childNodes, opponentId, bestKillNodes);
-
-    addPassNode(nodes, n.state, theirCellCount + myCellCount);
-
-    addBirthNodes(childNodes, n.state, opponentId, bestKillNodes, theirCellCount + myCellCount + 1);
-
-    sort(childNodes, childNodes + numMoves, nodeCompare);
     n.heuristicValue = childNodes[numMoves - 1].heuristicValue;
   }
 }
