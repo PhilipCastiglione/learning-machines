@@ -9,6 +9,8 @@
 
 using namespace std;
 
+
+/* Node is the primary structure representing a move and associated state */
 struct node
 {
   char state[16][18];
@@ -20,26 +22,16 @@ struct node
   int sac2Idx;
 };
 
-void game();
-void processAction();
-void processUpdate();
-void processSettings();
-void parseState(const string &value);
-void makeMove();
-void buildChildren(node nodes[], const char state[][18], char id, int cellCount, int numMoves);
-void addKillNodes(node nodes[], const char state[][18]);
-void findBestKillNodes(const node nodes[], char id, node bestKillNodes[], int idx);
-void addPassNode(node nodes[], const char state[][18], int idx);
-void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx);
-void considerOpponentMoves(node nodes[]);
+void play();
+game newGame();
+void makeMove(const game &g);
+void buildChildren(node nodes[], const char state[][18], char botId, int cellCount, int numMoves);
+void addKillNodes(node nodes[], const char state[][18], char botId);
+void findBestKillNodes(const node nodes[], char botId, node bestKillNodes[], int idx);
+void addPassNode(node nodes[], const char state[][18], int idx, char botId);
+void addBirthNodes(node nodes[], const char state[][18], const node bestKillNodes[], int idx, char botId);
+void considerOpponentMoves(const game &g, node nodes[]);
 node findBestNode(const node nodes[], int idxBound);
-void sendMove(const node &n);
-void calculateNextState(node &n, int lookahead);
-void calculateHeuristic(node &n);
-int factorial(int x, int result = 1);
-string coords(int cellIdx);
-void copyState(const char source[][18], char target[][18]);
-bool nodeCompare(node lhs, node rhs);
 
 // debug/test functions
 void zeroGameState();

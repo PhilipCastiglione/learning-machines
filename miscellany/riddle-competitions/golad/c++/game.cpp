@@ -1,185 +1,72 @@
 #include "game.h"
 
-#define LOOKAHEAD 2
-#define SACRIFICE_OPTIONS 2
-#define OPPONENT_MOVES 2
+using namespace std; // TODO: can I remove this?
 
-using namespace std;
+/*
+ * BOT PARAMETERS
+ * These are parameters that can be varied to change bot performance. In
+ * general, higher numbers result in smarter behaviour but slower runtime.
+ */
+int lookahead = 2;
+int sacrificeOptions = 2;
+int opponentMoves = 2;
 
-// globals
-int sacrificeCombinations = (SACRIFICE_OPTIONS == 2) ? 1 : factorial(SACRIFICE_OPTIONS) / (factorial(SACRIFICE_OPTIONS - 2) * factorial(2));
-stringstream token;
-char botId, opponentId;
-char gameState[16][18];
-int roundNum, timebank, myLiveCells, theirLiveCells;
-
-// this just for logging time TODO: remove
-auto t = chrono::steady_clock::now();
-
-void game()
+void play()
 {
-  string line, command;
 
-  while (getline(cin, line))
-  {
-    token.clear();
-    token.str(line);
-    token >> command;
+  game g = newGame();
 
-    if (command == "action")
-      processAction();
-    if (command == "update")
-      processUpdate();
-    if (command == "settings")
-      processSettings();
-  }
 }
 
-void processAction()
+game newGame()
 {
-  string type, time;
-  token >> type;
-  token >> time;
-
-  if (type == "move") {
-    t = chrono::steady_clock::now(); // TODO: remove
-    timebank = stoi(time);
-    makeMove();
-    chrono::duration<double> diff = chrono::steady_clock::now() - t; // TODO: remove
-    cerr << diff.count() * 1000 << "ms used\n"; // TODO: remove
-  } else
-    cerr << "action type: " << type << " not expected\n";
+  game g;
+  g.sacrificeCombinations = (sacrificeOptions == 2) ? 1 : factorial(sacrificeOptions) / (factorial(sacrificeOptions - 2) * factorial(2));
+  return g;
 }
 
-void processUpdate()
+void makeMove(const game &g)
 {
-  string target, field, value;
-  token >> target;
-  token >> field;
-  token >> value;
-
-  if (target == "game") {
-    if (field == "round") {
-      roundNum = stoi(value);
-      cerr << "received round " << roundNum << "\n"; // TODO: remove
-    }
-    if (field == "field") {
-      parseState(value);
-    }
-  } else if (target == "player0" or target == "player1") {
-    if (field == "living_cells") {
-      if (target[6] == botId)
-        myLiveCells = stoi(value);
-      else
-        theirLiveCells = stoi(value);
-    } else if (field != "move")
-      cerr << "update " << target << " field: " << field << " not expected\n";
-  } else
-    cerr << "update target: " << target << " not expected\n";
-}
-
-void processSettings()
-{
-  string field, value;
-  token >> field;
-  token >> value;
-
-  if (field == "player_names") {
-    if (value != "player0,player1")
-      cerr << "settings player_names value: " << value << " not expected\n";
-  } else if (field == "your_bot") {
-    if (value != "player0" and value != "player1")
-      cerr << "settings your_bot value: " << value << " not expected\n";
-  } else if (field == "timebank") {
-    if (value == "10000")
-      timebank = stoi(value);
-    else
-      cerr << "settings timebank value: " << value << " not expected\n";
-  } else if (field == "time_per_move") {
-    if (value != "100")
-      cerr << "settings time_per_move value: " << value << " not expected\n";
-  } else if (field == "field_width") {
-    if (value != "18")
-      cerr << "settings field_width value: " << value << " not expected\n";
-  } else if (field == "field_height") {
-    if (value != "16")
-      cerr << "settings field_height value: " << value << " not expected\n";
-  } else if (field == "max_rounds") {
-    if (value != "100")
-      cerr << "settings max_rounds value: " << value << " not expected\n";
-  } else if (field == "your_botid") {
-    if (value == "0") {
-      botId = '0';
-      opponentId = '1';
-    } else if (value == "1") {
-      botId = '1';
-      opponentId = '0';
-    }
-    else
-      cerr << "settings your_botid value: " << value << " not expected\n";
-  } else
-    cerr << "settings field: " << field << " not expected\n";
-}
-
-void parseState(const string &value)
-{
-  int row = 0;
-  int col = 0;
-  for (const char& c : value) {
-    if (c != ',') {
-      gameState[row][col] = c;
-      if (col == 17) {
-        col = 0;
-        row++;
-      } else {
-        col++;
-      }
-    }
-  }
-}
-
-void makeMove()
-{
-  int cellCount = myLiveCells + theirLiveCells;
-  int numMoves = 1 + (cellCount) + (sacrificeCombinations * (288 - cellCount));
+  int cellCount = g.botCellCount + g.opponentCellCount;
+  int numMoves = 1 + (cellCount) + (g.sacrificeCombinations * (288 - cellCount));
 
   node nodes[numMoves];
 
-  buildChildren(nodes, gameState, botId, cellCount, numMoves);
+  buildChildren(nodes, g.state, g.botId, cellCount, numMoves);
   // TODO: remove
   for (int i = 0; i < numMoves; i++) {
     cerr << "node " << i << nodes[i].type<< ": " << nodes[i].heuristicValue << "\n";
   }
-  considerOpponentMoves(nodes);
+  considerOpponentMoves(g, nodes);
   // TODO: remove
   for (int i = 0; i < numMoves; i++) {
     cerr << "node " << i << nodes[i].type<< ": " << nodes[i].heuristicValue << "\n";
   }
 
-  node bestNode = findBestNode(nodes, OPPONENT_MOVES);
+  node bestNode = findBestNode(nodes, opponentMoves);
 
   sendMove(bestNode);
 }
 
-void buildChildren(node nodes[], const char state[][18], char id, int cellCount, int numMoves)
+void buildChildren(node nodes[], const char state[][18], char botId, int cellCount, int numMoves)
 {
   // TODO: handle less then n of my cells alive for birthing calcs
-  addKillNodes(nodes, state);
+  addKillNodes(nodes, state, botId);
 
-  node bestKillNodes[SACRIFICE_OPTIONS];
+  node bestKillNodes[sacrificeOptions];
 
   sort(nodes, nodes + cellCount, nodeCompare);
 
-  findBestKillNodes(nodes, id, bestKillNodes, cellCount);
+  findBestKillNodes(nodes, botId, bestKillNodes, cellCount);
 
-  addPassNode(nodes, state, cellCount);
+  addPassNode(nodes, state, cellCount, botId);
 
-  addBirthNodes(nodes, state, id, bestKillNodes, cellCount + 1);
+  addBirthNodes(nodes, state, bestKillNodes, cellCount + 1, botId);
 
   sort(nodes, nodes + numMoves, nodeCompare);
 }
 
-void addKillNodes(node nodes[], const char state[][18])
+void addKillNodes(node nodes[], const char state[][18], char botId)
 {
   int i = 0;
   for (int r = 0; r < 16; r++) {
@@ -191,42 +78,42 @@ void addKillNodes(node nodes[], const char state[][18])
         n.targetIdx = r * 18 + c;
         copyState(state, n.state);
         n.state[r][c] = '.';
-        calculateNextState(n, LOOKAHEAD);
-        calculateHeuristic(n);
+        calculateNextState(n, lookahead);
+        calculateHeuristic(n, botId);
         nodes[i++] = n;
       }
     }
   }
 }
 
-void findBestKillNodes(const node nodes[], char id, node bestKillNodes[], int idx)
+void findBestKillNodes(const node nodes[], char botId, node bestKillNodes[], int idx)
 {
   int killNodeCount = 0;
   for (int i = 0; i < idx; i++) {
-    if (nodes[i].targetId == id) {
+    if (nodes[i].targetId == botId) {
       bestKillNodes[killNodeCount++] = nodes[i];
 
-      if (killNodeCount == SACRIFICE_OPTIONS) {
+      if (killNodeCount == sacrificeOptions) {
         break;
       }
     }
   }
 }
 
-void addPassNode(node nodes[], const char state[][18], int idx)
+void addPassNode(node nodes[], const char state[][18], int idx, char botId)
 {
   node n;
   n.type = 'p';
   copyState(state, n.state);
-  calculateNextState(n, LOOKAHEAD);
-  calculateHeuristic(n);
+  calculateNextState(n, lookahead);
+  calculateHeuristic(n, botId);
   nodes[idx] = n;
 }
 
-void addBirthNodes(node nodes[], const char state[][18], int id, const node bestKillNodes[], int idx)
+void addBirthNodes(node nodes[], const char state[][18], const node bestKillNodes[], int idx, char botId)
 {
-  for (int x = 0; x < SACRIFICE_OPTIONS - 1; x++) {
-    for (int y = x + 1; y < SACRIFICE_OPTIONS; y++) {
+  for (int x = 0; x < sacrificeOptions - 1; x++) {
+    for (int y = x + 1; y < sacrificeOptions; y++) {
       for (int r = 0; r < 16; r++) {
         for (int c = 0; c < 18; c++) {
           if (state[r][c] == '.') {
@@ -236,11 +123,11 @@ void addBirthNodes(node nodes[], const char state[][18], int id, const node best
             n.sac1Idx = bestKillNodes[x].targetIdx;
             n.sac2Idx = bestKillNodes[y].targetIdx;
             copyState(state, n.state);
-            n.state[r][c] = id;
+            n.state[r][c] = botId;
             n.state[n.sac1Idx / 18][n.sac1Idx % 18] = '.';
             n.state[n.sac2Idx / 18][n.sac2Idx % 18] = '.';
-            calculateNextState(n, LOOKAHEAD);
-            calculateHeuristic(n);
+            calculateNextState(n, lookahead);
+            calculateHeuristic(n, botId);
             nodes[idx++] = n;
           }
         }
@@ -249,9 +136,9 @@ void addBirthNodes(node nodes[], const char state[][18], int id, const node best
   }
 }
 
-void considerOpponentMoves(node nodes[])
+void considerOpponentMoves(const game &g, node nodes[])
 {
-  for (int i = 0; i < OPPONENT_MOVES; i++) {
+  for (int i = 0; i < opponentMoves; i++) {
     node n = nodes[i];
 
     int liveCellCount = 0;
@@ -263,11 +150,11 @@ void considerOpponentMoves(node nodes[])
       }
     }
 
-    int numMoves = 1 + (liveCellCount) + (sacrificeCombinations * (288 - liveCellCount));
+    int numMoves = 1 + (liveCellCount) + (g.sacrificeCombinations * (288 - liveCellCount));
 
     node childNodes[numMoves];
 
-    buildChildren(childNodes, n.state, opponentId, liveCellCount, numMoves);
+    buildChildren(childNodes, n.state, g.opponentId, liveCellCount, numMoves);
 
     n.heuristicValue = childNodes[numMoves - 1].heuristicValue;
   }
@@ -287,159 +174,30 @@ node findBestNode(const node nodes[], int idxBound)
   return nodes[topHeuristicIdx];
 }
 
-void sendMove(const node &n)
-{
-  if (n.type == 'p') {
-    cout << "pass\n";
-  } else if (n.type == 'k') {
-    cout << "kill " << coords(n.targetIdx) << "\n";
-  } else if (n.type == 'b') {
-    cout << "birth " << coords(n.targetIdx) << " " << coords(n.sac1Idx) << " " << coords(n.sac2Idx) << "\n";
-  }
-}
-
-void calculateNextState(node &n, int lookahead)
-{
-  for (int l = 0; l < lookahead; l++) {
-    int neighbours0[16][18];
-    int neighbours1[16][18];
-
-    for (int r = 0; r < 16; r++) {
-      for (int c = 0; c < 18; c++) {
-        neighbours0[r][c] = 0;
-        neighbours1[r][c] = 0;
-      }
-    }
-
-    for (int r = 0; r < 16; r++) {
-      for (int c = 0; c < 18; c++) {
-        if (n.state[r][c] == '0') {
-          if (c > 0) {
-            neighbours0[r][c - 1]++;
-            if (r > 0) neighbours0[r - 1][c - 1]++;
-            if (r < 15) neighbours0[r + 1][c - 1]++;
-          }
-          if (c < 17) {
-            neighbours0[r][c + 1]++;
-            if (r > 0) neighbours0[r - 1][c + 1]++;
-            if (r < 15) neighbours0[r + 1][c + 1]++;
-          }
-          if (r > 0) neighbours0[r - 1][c]++;
-          if (r < 15) neighbours0[r + 1][c]++;
-        }
-        if (n.state[r][c] == '1') {
-          if (c > 0) {
-            neighbours1[r][c - 1]++;
-            if (r > 0) neighbours1[r - 1][c - 1]++;
-            if (r < 15) neighbours1[r + 1][c - 1]++;
-          }
-          if (c < 17) {
-            neighbours1[r][c + 1]++;
-            if (r > 0) neighbours1[r - 1][c + 1]++;
-            if (r < 15) neighbours1[r + 1][c + 1]++;
-          }
-          if (r > 0) neighbours1[r - 1][c]++;
-          if (r < 15) neighbours1[r + 1][c]++;
-        }
-      }
-    }
-
-    int neighbours;
-    for (int r = 0; r < 16; r++) {
-      for (int c = 0; c < 18; c++) {
-        neighbours = neighbours0[r][c] + neighbours1[r][c];
-        if (n.state[r][c] == '.' and neighbours == 3) {
-          n.state[r][c] = (neighbours0[r][c] > neighbours1[r][c]) ?  '0' : '1';
-        } else if (n.state[r][c] != '.' and (neighbours < 2 or neighbours > 3)) {
-          n.state[r][c] = '.';
-        }
-      }
-    }
-  }
-}
-
-void calculateHeuristic(node &n)
-{
-  int cellCount0 = 0;
-  int cellCount1 = 0;
-
-  // TODO: consider the number of opponent cells alive to increase aggression when they are low
-  for (int r = 0; r < 16; r++) {
-    for (int c = 0; c < 18; c++) {
-      if (n.state[r][c] == '0') {
-        cellCount0++;
-      } else if (n.state[r][c] == '1') {
-        cellCount1++;
-      }
-    }
-  }
-
-  if (botId == '0') {
-    if (cellCount0 == 0) {
-      n.heuristicValue = -288;
-    } else if (cellCount1 == 0) {
-      n.heuristicValue = 288;
-    } else {
-      n.heuristicValue = cellCount0 - cellCount1;
-    }
-  } else if (botId == '1') {
-    if (cellCount1 == 0) {
-      n.heuristicValue = -288;
-    } else if (cellCount0 == 0) {
-      n.heuristicValue = 288;
-    } else {
-      n.heuristicValue = cellCount1 - cellCount0;
-    }
-  }
-}
-
-// utility functions
-int factorial(int x, int result) {
-  return (x == 1) ? result : factorial(x - 1, x * result);
-}
-
-string coords(int cellIdx)
-{
-  stringstream ss;
-  ss << (cellIdx % 18) << "," << cellIdx / 18;
-  return ss.str();
-}
-
-void copyState(const char source[][18], char target[][18])
-{
-  for (int r = 0; r < 16; r++) {
-    for (int c = 0; c < 18; c++) {
-      target[r][c] = source[r][c];
-    }
-  }
-}
-
-bool nodeCompare(node lhs, node rhs)
-{
-  // sort descending
-  return lhs.heuristicValue > rhs.heuristicValue;
-}
-
 // debug/test functions
 void zeroGameState()
 {
+  game g; //  TODO: remove, tests not on now
   for (int r = 0; r < 16; r++) {
     for (int c = 0; c < 18; c++) {
-      gameState[r][c] = '.';
+      g.state[r][c] = '.';
     }
   }
 }
 
 void pasteState(char target[][18])
 {
+  game g; //  TODO: remove, tests not on now
   for (int r = 0; r < 16; r++) {
     for (int c = 0; c < 18; c++) {
-      target[r][c] = gameState[r][c];
+      target[r][c] = g.state[r][c];
     }
   }
 }
 
 void setBotId(const char id)
 {
-  botId = id;
+  game g; //  TODO: remove, tests not on now
+  g.botId = id;
 }
+
