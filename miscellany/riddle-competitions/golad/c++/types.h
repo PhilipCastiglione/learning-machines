@@ -26,7 +26,6 @@ struct game
   int timebank;
   int myCellCount;
   int yourCellCount;
-  int sacrificeCombinations; // TODO: this is questionable
 };
 
 /**
