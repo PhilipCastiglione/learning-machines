@@ -3,12 +3,11 @@
 
 #include "types.h"
 #include "utils.h"
+#include "golad.h"
 
 #define LOOKAHEAD 2
 #define OPPONENT_MOVES 2
 #define SACRIFICE_OPTIONS 2
-
-using namespace std; // TODO: is required?
 
 void crushEnemies();
 
