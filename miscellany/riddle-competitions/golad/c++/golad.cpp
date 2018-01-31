@@ -1,7 +1,7 @@
 #include "golad.h"
 
 /* PUBLIC FUNCTIONS */
-void calculateNextState(move &m, int lookahead)
+void calculateNextState(board &b, int lookahead)
 {
   for (int l = 0; l < lookahead; l++) {
     // in our first pass, we build up arrays of counts of neighbours
@@ -15,7 +15,7 @@ void calculateNextState(move &m, int lookahead)
     // calculating the next state takes a substantial amount of skynets
     // computation, so this is all unrolled, optimising for speed
     for (int i = 0; i < MAX_CELLS; i++) {
-      if (m.b.state[i] == '0') {
+      if (b.state[i] == '0') {
         if (i % COLS > 0) {              // not on left edge
           neighbours0[i - 1]++;          // add to left cell neighbour
           if (i >= COLS)                 // not on top edge
@@ -34,7 +34,7 @@ void calculateNextState(move &m, int lookahead)
           neighbours0[i - COLS]++;       // add to top neighbour
         if (i <= MAX_CELLS - COLS - 1)   // not on bottom edge
           neighbours0[i - COLS]++;       // add to bottom neighbour
-      } else if (m.b.state[i] == '1') {
+      } else if (b.state[i] == '1') {
         if (i % COLS > 0) {              // not on left edge
           neighbours1[i - 1]++;          // add to left cell neighbour
           if (i >= COLS)                 // not on top edge
@@ -60,17 +60,17 @@ void calculateNextState(move &m, int lookahead)
     int neighbours;
     for (int i = 0; i < MAX_CELLS; i++) {
       neighbours = neighbours0[i] + neighbours1[i];
-      if (m.b.state[i] == '.' and neighbours == 3) {                           // dead, will grow new cell
-        m.b.state[i] = (neighbours0[i] > neighbours1[i]) ? '0' : '1';          // majority parent wins
-      } else if (m.b.state[i] != '.' and (neighbours < 2 or neighbours > 3)) { // alive, will die
-        m.b.state[i] = '.';                                                    // ded
+      if (b.state[i] == '.' and neighbours == 3) {                           // dead, will grow new cell
+        b.state[i] = (neighbours0[i] > neighbours1[i]) ? '0' : '1';          // majority parent wins
+      } else if (b.state[i] != '.' and (neighbours < 2 or neighbours > 3)) { // alive, will die
+        b.state[i] = '.';                                                    // ded
       }
     }
   }
 }
 
 // TODO: consider the number of opponent cells alive to increase aggression when they are low
-void calculateHeuristic(move &m, char myId)
+void calculateHeuristic(board &b, char myId)
 {
   char yourId = (myId == '0')? '1' : '0';
 
@@ -79,9 +79,9 @@ void calculateHeuristic(move &m, char myId)
 
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
-      if (m.b.state[r * COLS + c] == myId) {
+      if (b.state[r * COLS + c] == myId) {
         myCellCount++;
-      } else if (m.b.state[r * COLS + c] == yourId) {
+      } else if (b.state[r * COLS + c] == yourId) {
         yourCellCount++;
       }
     }
@@ -91,10 +91,10 @@ void calculateHeuristic(move &m, char myId)
   //  - if we are out of cells, avoid at all costs; or
   //  - if they have no cells, choose at any cost
   if (myCellCount == 0) {
-    m.b.heuristicValue = -MAX_CELLS;
+    b.heuristicValue = -MAX_CELLS;
   } else if (yourCellCount == 0) {
-    m.b.heuristicValue = MAX_CELLS;
+    b.heuristicValue = MAX_CELLS;
   } else {
-    m.b.heuristicValue = myCellCount - yourCellCount;
+    b.heuristicValue = myCellCount - yourCellCount;
   }
 }

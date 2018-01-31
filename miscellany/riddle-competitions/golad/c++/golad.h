@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void calculateNextState(move &m, int lookahead);
-void calculateHeuristic(move &m, char myId);
+void calculateNextState(board &b, int lookahead);
+void calculateHeuristic(board &b, char myId);
 
 #endif
