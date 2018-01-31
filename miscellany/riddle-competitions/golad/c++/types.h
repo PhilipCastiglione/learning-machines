@@ -1,12 +1,16 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#define ROWS 16
+#define COLS 18
+#define MAX_CELLS (ROWS * COLS)
+
 /**
  * The board object contains a state representation and an associated value.
  */
 struct board
 {
-  char state[16][18];
+  char state[MAX_CELLS];
   int heuristicValue;
 };
 

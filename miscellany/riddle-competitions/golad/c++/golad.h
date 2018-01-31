@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-#define MAX_HEURISTIC
-
 void calculateNextState(move &m, int lookahead);
 void calculateHeuristic(move &m, char myId);
 

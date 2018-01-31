@@ -88,18 +88,10 @@ void _processUpdate(stringstream &tokens, game &g)
 
 void _parseState(game &g, const string &value)
 {
-  int row = 0;
-  int col = 0;
+  int i = 0;
   for (const char& c : value) {
-    if (c != ',') {
-      g.b.state[row][col] = c;
-      if (col == 17) {
-        col = 0;
-        row++;
-      } else {
-        col++;
-      }
-    }
+    if (c != ',')
+      g.b.state[i++] = c;
   }
 }
 
@@ -125,10 +117,10 @@ void _processSettings(stringstream &tokens, game &g)
     if (value != "100")
       cerr << "settings time_per_move value: " << value << " not expected\n";
   } else if (field == "field_width") {
-    if (value != "18")
+    if (stoi(value) != COLS)
       cerr << "settings field_width value: " << value << " not expected\n";
   } else if (field == "field_height") {
-    if (value != "16")
+    if (stoi(value) != ROWS)
       cerr << "settings field_height value: " << value << " not expected\n";
   } else if (field == "max_rounds") {
     if (value != "100")
@@ -151,6 +143,6 @@ void _processSettings(stringstream &tokens, game &g)
 string _coords(int cellIdx)
 {
   stringstream ss;
-  ss << (cellIdx % 18) << "," << cellIdx / 18;
+  ss << (cellIdx % COLS) << "," << cellIdx / COLS;
   return ss.str();
 }

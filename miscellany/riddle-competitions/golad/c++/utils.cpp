@@ -11,11 +11,9 @@ bool moveCompare(move &lhs, move &rhs)
   return lhs.b.heuristicValue > rhs.b.heuristicValue;
 }
 
-void copyState(const char source[][18], char target[][18])
+void copyState(const char source[], char target[])
 {
-  for (int r = 0; r < 16; r++) {
-    for (int c = 0; c < 18; c++) {
-      target[r][c] = source[r][c];
-    }
+  for (int i = 0; i < MAX_CELLS; i++) {
+    target[i] = source[i];
   }
 }

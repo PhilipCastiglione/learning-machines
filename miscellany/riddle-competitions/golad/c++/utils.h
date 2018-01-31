@@ -5,6 +5,6 @@
 
 int factorial(int x, int result = 1);
 bool moveCompare(move &lhs, move &rhs);
-void copyState(const char source[][18], char target[][18]);
+void copyState(const char source[], char target[]);
 
 #endif
