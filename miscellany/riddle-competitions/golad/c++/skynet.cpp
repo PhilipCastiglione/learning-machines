@@ -1,8 +1,15 @@
 #include "skynet.h"
-#include "api.h"
 
 /* FORWARD DECLARATIONS */
-// TODO: add these
+void _act(game &g);
+int _numMovesFor(int cellCount);
+void _buildMoves(const game &g, move moves[], int numMoves);
+void _buildKillMoves(const game &g, move moves[]);
+void _buildBirthMoves(const game &g, move moves[])
+void _buildPassMove(const game &g, move moves[], int numMoves);
+void _projectOpponentMoves(const game &g, move moves[]);
+game gameAfterMove(const game &g, const move &m);
+move _selectMove(move moves[]);
 
 /* PUBLIC FUNCTIONS */
 void crushEnemies()
@@ -19,7 +26,6 @@ void _act(game &g)
 
   _buildMoves(g, moves, numMoves);
 
-  // TODO: placeholder
   _projectOpponentMoves(g, moves);
 
   move m = _selectMove(moves);
@@ -45,6 +51,7 @@ void _buildMoves(const game &g, move moves[], int numMoves)
   _buildKillMoves(g, moves);
   _buildBirthMoves(g, moves);
   _buildPassMove(g, moves, numMoves);
+  sort(moves, moves + numMoves, moveCompare);
 }
 
 void _buildKillMoves(const game &g, move moves[])
@@ -131,8 +138,46 @@ void _buildPassMove(const game &g, move moves[], int numMoves)
 
 void _projectOpponentMoves(const game &g, move moves[])
 {
+  // for each move we want to look at, create a game state as though that move
+  // has been taken, then build out the next moves (from opponents perspective)
+  for (int i = 0; i < OPPONENT_MOVES; i++) {
+    game childGame = gameAfterMove(g, move[i]);
+
+    int numMoves = _numMovesFor(childGame.myCellCount + childGame.yourCellCount);
+    move childMoves[numMoves];
+
+    _buildMoves(childGame, childMoves, numMoves);
+
+    // update the heuristic to the heuristicValue from our perspective, of what
+    // the opponent considered their best move
+    calculateHeuristic(childMoves[0].b, g.myId);
+    move[i].b.heuristicValue = childMoves[0].b.heuristicValue;
+  }
+}
+
+game gameAfterMove(const game &g, const move &m)
+{
+    game childGame;
+    childGame.b = m.b;
+    childGame.myId = g.yourId;
+    childGame.yourId = g.myId;
+    childGame.myCellCount = 0;
+    childGame.yourCellCount = 0;
+
+    for (int c = 0; c < MAX_CELLS; c++) {
+      if (childGame.b[c] == childGame.myId) {
+        childGame.myCellCount++;
+      } else if (childGame.b[c] == childGame.yourId) {
+        childGame.yourCellCount++;
+      }
+    }
+
+    return childGame;
 }
 
 move _selectMove(move moves[])
 {
+  sort(moves, moves + OPPONENT_MOVES, moveCompare);
+
+  return moves[i];
 }

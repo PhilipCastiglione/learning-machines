@@ -2,6 +2,7 @@
 #define SKYNET_H_
 
 #include "types.h"
+#include "api.h"
 #include "utils.h"
 #include "golad.h"
 
