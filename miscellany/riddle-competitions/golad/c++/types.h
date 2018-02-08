@@ -29,9 +29,9 @@ struct game
 };
 
 /**
- * The move object represents a potential move and its attributes.
+ * The gameMove object represents a potential gameMove and its attributes.
  */
-struct move
+struct gameMove
 {
   board b;
   char type;

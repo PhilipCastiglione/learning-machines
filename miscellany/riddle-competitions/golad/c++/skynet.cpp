@@ -3,13 +3,13 @@
 /* FORWARD DECLARATIONS */
 void _act(game &g);
 int _numMovesFor(int cellCount);
-void _buildMoves(const game &g, move moves[], int numMoves);
-void _buildKillMoves(const game &g, move moves[]);
-void _buildBirthMoves(const game &g, move moves[])
-void _buildPassMove(const game &g, move moves[], int numMoves);
-void _projectOpponentMoves(const game &g, move moves[]);
-game gameAfterMove(const game &g, const move &m);
-move _selectMove(move moves[]);
+void _buildMoves(const game &g, gameMove moves[], int numMoves);
+void _buildKillMoves(const game &g, gameMove moves[]);
+void _buildBirthMoves(const game &g, gameMove moves[]);
+void _buildPassMove(const game &g, gameMove moves[], int numMoves);
+void _projectOpponentMoves(const game &g, gameMove moves[]);
+game gameAfterMove(const game &g, const gameMove &m);
+gameMove _selectMove(gameMove moves[]);
 
 /* PUBLIC FUNCTIONS */
 void crushEnemies()
@@ -22,13 +22,13 @@ void crushEnemies()
 void _act(game &g)
 {
   int numMoves = _numMovesFor(g.myCellCount + g.yourCellCount);
-  move moves[numMoves];
+  gameMove moves[numMoves];
 
   _buildMoves(g, moves, numMoves);
 
   _projectOpponentMoves(g, moves);
 
-  move m = _selectMove(moves);
+  gameMove m = _selectMove(moves);
 
   sendMove(m);
 }
@@ -46,7 +46,7 @@ int _numMovesFor(int cellCount)
   return 1 + (cellCount) + (sacrificeCombinations * (MAX_CELLS - cellCount));
 }
 
-void _buildMoves(const game &g, move moves[], int numMoves)
+void _buildMoves(const game &g, gameMove moves[], int numMoves)
 {
   _buildKillMoves(g, moves);
   _buildBirthMoves(g, moves);
@@ -54,14 +54,14 @@ void _buildMoves(const game &g, move moves[], int numMoves)
   sort(moves, moves + numMoves, moveCompare);
 }
 
-void _buildKillMoves(const game &g, move moves[])
+void _buildKillMoves(const game &g, gameMove moves[])
 {
   int mIdx = 0;
   for (int i = 0; i < MAX_CELLS; i++) {
-    if (state[i] != '.') {
-      move m;
+    if (g.b.state[i] != '.') {
+      gameMove m;
       m.type = 'k';
-      m.targetId = state[i];
+      m.targetId = g.b.state[i];
       m.targetIdx = i;
 
       copyState(g.b.state, m.b.state);
@@ -75,9 +75,9 @@ void _buildKillMoves(const game &g, move moves[])
   }
 }
 
-void _buildBirthMoves(const game &g, move moves[])
+void _buildBirthMoves(const game &g, gameMove moves[])
 {
-  int mIdx = g.myCells + g.yourCells;
+  int mIdx = g.myCellCount + g.yourCellCount;
   int bestHeuristic, thisHeuristic;
 
   // swap the best n cells that are killing my own into the first n positions
@@ -101,17 +101,17 @@ void _buildBirthMoves(const game &g, move moves[])
   for (int s1 = 0; s1 < SACRIFICE_OPTIONS - 1; s1++) {
     for (int s2 = s1 + 1; s2 < SACRIFICE_OPTIONS; s2++) {
       for (int i = 0; i < MAX_CELLS; i++) {
-        if (state[i] == '.') {
-          move m;
+        if (g.b.state[i] == '.') {
+          gameMove m;
           m.type = 'b';
           m.targetIdx = i;
           m.sac1Idx = moves[s1].targetIdx;
           m.sac2Idx = moves[s2].targetIdx;
 
           copyState(g.b.state, m.b.state);
-          m.state[i] = g.myId;
-          m.state[m.sac1Idx] = '.';
-          m.state[m.sac2Idx] = '.';
+          m.b.state[i] = g.myId;
+          m.b.state[m.sac1Idx] = '.';
+          m.b.state[m.sac2Idx] = '.';
 
           calculateNextState(m.b, LOOKAHEAD);
           calculateHeuristic(m.b, g.myId);
@@ -123,9 +123,9 @@ void _buildBirthMoves(const game &g, move moves[])
   }
 }
 
-void _buildPassMove(const game &g, move moves[], int numMoves)
+void _buildPassMove(const game &g, gameMove moves[], int numMoves)
 {
-  move m;
+  gameMove m;
   m.type = 'p';
 
   copyState(g.b.state, m.b.state);
@@ -136,26 +136,26 @@ void _buildPassMove(const game &g, move moves[], int numMoves)
   moves[numMoves - 1] = m;
 }
 
-void _projectOpponentMoves(const game &g, move moves[])
+void _projectOpponentMoves(const game &g, gameMove moves[])
 {
   // for each move we want to look at, create a game state as though that move
   // has been taken, then build out the next moves (from opponents perspective)
   for (int i = 0; i < OPPONENT_MOVES; i++) {
-    game childGame = gameAfterMove(g, move[i]);
+    game childGame = gameAfterMove(g, moves[i]);
 
     int numMoves = _numMovesFor(childGame.myCellCount + childGame.yourCellCount);
-    move childMoves[numMoves];
+    gameMove childMoves[numMoves];
 
     _buildMoves(childGame, childMoves, numMoves);
 
     // update the heuristic to the heuristicValue from our perspective, of what
     // the opponent considered their best move
     calculateHeuristic(childMoves[0].b, g.myId);
-    move[i].b.heuristicValue = childMoves[0].b.heuristicValue;
+    moves[i].b.heuristicValue = childMoves[0].b.heuristicValue;
   }
 }
 
-game gameAfterMove(const game &g, const move &m)
+game gameAfterMove(const game &g, const gameMove &m)
 {
     game childGame;
     childGame.b = m.b;
@@ -165,9 +165,9 @@ game gameAfterMove(const game &g, const move &m)
     childGame.yourCellCount = 0;
 
     for (int c = 0; c < MAX_CELLS; c++) {
-      if (childGame.b[c] == childGame.myId) {
+      if (childGame.b.state[c] == childGame.myId) {
         childGame.myCellCount++;
-      } else if (childGame.b[c] == childGame.yourId) {
+      } else if (childGame.b.state[c] == childGame.yourId) {
         childGame.yourCellCount++;
       }
     }
@@ -175,9 +175,9 @@ game gameAfterMove(const game &g, const move &m)
     return childGame;
 }
 
-move _selectMove(move moves[])
+gameMove _selectMove(gameMove moves[])
 {
   sort(moves, moves + OPPONENT_MOVES, moveCompare);
 
-  return moves[i];
+  return moves[0];
 }

@@ -1,5 +1,7 @@
 #include "api.h"
 
+using namespace std;
+
 /* FORWARD DECLARATIONS */
 void _processAction(stringstream &tokens, game &g, function<void (game &g)> act);
 void _processUpdate(stringstream &tokens, game &g);
@@ -8,7 +10,7 @@ void _processSettings(stringstream &tokens, game &g);
 string _coords(int cellIdx);
 
 /* PUBLIC FUNCTIONS */
-void listenForInput(game &g, function<void (game &g)> act);
+void listenForInput(game &g, function<void (game &g)> act)
 {
   stringstream tokens;
   string line, command;
@@ -27,7 +29,7 @@ void listenForInput(game &g, function<void (game &g)> act);
   }
 }
 
-void sendMove(const move &m)
+void sendMove(const gameMove &m)
 {
   if (m.type == 'p') {
     cout << "pass\n";

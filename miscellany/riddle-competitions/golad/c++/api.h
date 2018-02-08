@@ -3,12 +3,14 @@
 
 #include <functional>
 #include <chrono>
+#include <sstream>
+#include <iostream>
 
 #include "types.h"
 
 using namespace std;
 
 void listenForInput(game &g, function<void (game &g)> act);
-void sendMove(const move &m);
+void sendMove(const gameMove &m);
 
 #endif
