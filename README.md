@@ -36,8 +36,7 @@ from data.
 
 ## Miscellany
 
-1. The 8 queens problem solved with multiple search strategies
-1. Coursework for the Stanford Machine Learning course by Andrew Ng
+A bunch of disorganised things!
 
 [Link](./miscellany)
 
