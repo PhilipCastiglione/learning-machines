@@ -1,49 +1,13 @@
-This repository contains information related to an exploration of Artificial
-Intelligence programming and Machine Learning.
+This repository contains information related to a personal exploration of Artificial Intelligence programming and Machine Learning over the course of the last 8 years.
 
 # Contents
 
-1. [Uninformed Search](#uninformed-search)
-1. [Optimisation](#optimisation)
-1. [Charting](#charting)
-1. [Miscellany](#miscellany)
-1. [Licence](#licence)
-
-## Uninformed Search
-
-Implementations of a series of standard uninformed search algorithms with common
-variations, along with sample problems and a driver for testing the algorithms
-and generating result statistics.
-
-[Link](./uninformed_search)
-
-## Optimisation
-
-Implementations of optimisation techniques, starting with Genetic Algorithms. WIP.
-
-[Link](./optimisation)
-
-## Adversarial Search
-
-WIP.
-
-## Charting
-
-Not much, right now. Probably some simple tools for generating visualizations
-from data.
-
-[Link](./charting)
-
-## Miscellany
-
-A bunch of disorganised things!
-
-[Link](./miscellany)
+* [Machine Learning](./machine_learning/)
+* [Neuromorphic AI](./neuromorphic_ai/)
+* [Traditional AI](./traditional_ai/)
+* [Game AI](./game_ai/)
+* [Fun & Miscellany](./fun)
 
 ## Licence
 
 Refer to [LICENCE](./LICENCE).
-
-## TODO
-1. Charting stuff
-1. Adversarial search
