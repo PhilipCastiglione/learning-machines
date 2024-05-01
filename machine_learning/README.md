@@ -19,4 +19,5 @@
 
 ## Other
 
-* Coursework for the Stanford Machine Learning course by Andrew Ng
+* [Foundational ML techniques](./refresh/)
+* [Coursework for the Stanford Machine Learning course by Andrew Ng](./ml-stanford-ng/)
