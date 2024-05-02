@@ -12,7 +12,7 @@ Refer to .tool-versions and requirements.txt for dependencies.
 - [x] Naive Bayes
 - [x] Logistic Regression
 - [x] SVM
-- [ ] Neural Network
+- [x] Neural Network
 
 ### Linear Regression
 
