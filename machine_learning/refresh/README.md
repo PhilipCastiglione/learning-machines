@@ -9,7 +9,7 @@ Refer to .tool-versions and requirements.txt for dependencies.
 ### Classification
 
 - [x] KNN
-- [ ] Naive Bayes
+- [x] Naive Bayes
 - [ ] Logistic Regression
 - [ ] SVM
 - [ ] Neural Network
