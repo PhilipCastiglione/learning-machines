@@ -10,7 +10,7 @@ Refer to .tool-versions and requirements.txt for dependencies.
 
 - [x] KNN
 - [x] Naive Bayes
-- [ ] Logistic Regression
+- [x] Logistic Regression
 - [ ] SVM
 - [ ] Neural Network
 
